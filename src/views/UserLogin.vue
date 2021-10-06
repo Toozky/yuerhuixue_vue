@@ -1,21 +1,33 @@
 <template>
   <div>
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="账号" prop="text">
-        <el-input type="text" v-model="ruleForm.text" autocomplete="off" :value="ruleForm.text"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" :value="ruleForm.pass" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="userAdd">注册</el-button>
-      </el-form-item>
-    </el-form>
+    <div id="userLoginImg">
+      <img :src="userLoginImg">
+    </div>
+    <div id="userLogin">
+      <el-card shadow="hover">
+        <div style="text-align: center;opacity: 0.75;margin: 20px auto;">
+          <a style="font-size: x-large;">登　录</a>
+        </div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="40px" class="demo-ruleForm">
+          <el-form-item label="账号" prop="text">
+            <el-input type="text" v-model="ruleForm.text" autocomplete="off" :value="ruleForm.text"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pass">
+            <el-input type="password" v-model="ruleForm.pass" :value="ruleForm.pass" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+            <el-button type="success" @click="userAdd">注册</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+    <div id="logo">
+      <img :src="logoImg">
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -59,7 +71,9 @@ export default {
         pass: [
           {validator: validatePass, trigger: 'blur'}
         ]
-      }
+      },
+      userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
+      logoImg:require('@/assets/img/login/logo.png'),
     };
   },
   methods: {
@@ -126,11 +140,36 @@ export default {
     userAdd() {
       const _this = this
       _this.$router.push('/UserAdd')
-    }
+    },
   }
 }
 </script>
 
 <style scoped>
+#userLoginImg{
+  width: 100%;
+  margin-top: 150px;
+  position: absolute;
+  z-index: 1;
+}
+#userLoginImg img{
+  width: 100%;
+}
+#userLogin{
+  width: 400px;
+  height: 600px;
+  top: 300px;
+  left: 70%;
+  position: fixed;
+  z-index: 2;
+}
+#logo{
+  width: 75px;
+  position: fixed;
+  z-index: 3;
 
+}
+#logo img{
+  width: 100%;
+}
 </style>

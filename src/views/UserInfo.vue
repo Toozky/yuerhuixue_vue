@@ -5,12 +5,13 @@
         <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
         <el-upload
             class="avatar-uploader"
-            :action="this.baseUrl+'/user/uploadhead'"
+            :action="this.baseUrl+'/user/uploadimg'"
             :show-file-list="false"
             :before-upload="beforeAvatarUpload"
+            :on-error="handleAvatarError"
             :on-success="handleAvatarSuccess">
           <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-          <el-button type="success" @click="submitHead">确认上传</el-button>
+          <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -107,6 +108,7 @@ export default {
       token: '',
       headImg: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       newImg: '',
+      imgOK: false,
       form: {
         createTime: '',
         updateTime: '',
@@ -162,82 +164,91 @@ export default {
     userModify(form) {
       const _this = this
       _this.$refs[form].validate((valid) => {
-        if (!valid) {
+        if (valid) {
+
+          _this.$confirm('您确定要修改为当前信息吗？', '提示', {
+            cancelButtonText: '取消',
+            confirmButtonText: '确定',
+            type: 'warning'
+          }).then(() => {
+            axios({
+              method: 'put',
+              url: '/user/modify',
+              headers: {
+                token: _this.token
+              },
+              data: {
+                userId: _this.form.userId,
+                userAge: _this.form.userAge,
+                userEmail: _this.form.userEmail,
+                userGender: _this.form.userGender,
+                userImg: _this.form.userImg,
+                userName: _this.form.userName,
+                userNickname: _this.form.userNickname,
+                userTel: _this.form.userTel
+              }
+            }).then((resp) => {
+              if (resp.data.code === 10000) {
+                const user = resp.data.data
+                setCookie("userId", user.userId, 30)
+                setCookie("userName", user.userName, 30)
+                setCookie("userNickname", user.userNickname, 30)
+                setCookie("userAge", user.userAge, 30)
+                setCookie("userTel", user.userTel, 30)
+                setCookie("userEmail", user.userEmail, 30)
+                setCookie("userGender", user.userGender, 30)
+                setCookie("userImg", user.userImg, 30)
+                _this.$message({
+                  showClose: true,
+                  type: 'success',
+                  message: '修改成功!'
+                })
+                setTimeout(() => {
+                  _this.$router.push('/Main')
+                }, 3000);
+              }
+              if (resp.data.code === 10001) {
+                _this.$message({
+                  showClose: true,
+                  type: 'error',
+                  message: '修改失败!'
+                })
+              }
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            });
+          });
+
+        }else {
           _this.$alert('请检查输入信息是否正确', '提示', {
             confirmButtonText: '确定',
           });
         }
-      })
-      _this.$confirm('您确定要修改为当前信息吗？', '提示', {
-        cancelButtonText: '取消',
-        confirmButtonText: '确定',
-        type: 'warning'
-      }).then(() => {
-        /*userinfo.userId = _this.form.userId,
-        userinfo.userAge = _this.form.userAge,
-        userinfo.userEmail = _this.form.userEmail,
-        userinfo.userGender = _this.form.userGender,
-        userinfo.userImg = _this.form.userImg,
-        userinfo.userName = _this.form.userName,
-        userinfo.userNickname = _this.form.userNickname,
-        userinfo.userTel = _this.form.userTel,*/
-        axios({
-          method: 'put',
-          url: '/user/modify',
-          headers: {
-            token: _this.token
-          },
-          data: {
-            userId: _this.form.userId,
-            userAge: _this.form.userAge,
-            userEmail: _this.form.userEmail,
-            userGender: _this.form.userGender,
-            userImg: _this.form.userImg,
-            userName: _this.form.userName,
-            userNickname: _this.form.userNickname,
-            userTel: _this.form.userTel
-
-          }
-        }).then((resp) => {
-          if (resp.data.code === 10000) {
-            const user = resp.data.data
-            setCookie("userId", user.userId, 30)
-            setCookie("userName", user.userName, 30)
-            setCookie("userNickname", user.userNickname, 30)
-            setCookie("userAge", user.userAge, 30)
-            setCookie("userTel", user.userTel, 30)
-            setCookie("userEmail", user.userEmail, 30)
-            setCookie("userGender", user.userGender, 30)
-            setCookie("userImg", user.userImg, 30)
-            _this.$message({
-              type: 'success',
-              message: '修改成功!'
-            })
-            setTimeout(() => {
-              _this.$router.push('/Main')
-            }, 3000);
-          }
-          if (resp.data.code === 10001) {
-            _this.$message({
-              type: 'error',
-              message: '修改失败!'
-            })
-          }
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        });
       });
+
+    },
+    handleAvatarError(err, file, fileList){
+      console.log(err.status)
+      if (err.status===500){
+        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
+        _this.imgOK=!_this.imgOK
+      }
+      if (err.status===404){
+        this.$message.error('上传头像失败!');
+        _this.imgOK=!_this.imgOK
+      }
     },
     handleAvatarSuccess(res, file) {
       const _this = this
+      _this.imgOK=!_this.imgOK
       _this.headImg = this.headImgUrl + res.data
       _this.newImg = res.data
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || 'image/jpg' || 'image/png';
+      const isJPG = file.type === ('image/jpeg' || 'image/jpg' || 'image/png');
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
@@ -281,12 +292,14 @@ export default {
           setCookie("userGender", user.userGender, 30)
           setCookie("userImg", user.userImg, 30)
           _this.$message({
+            showClose: true,
             type: 'success',
             message: '修改成功!'
           });
         }
         if (resp.data.code === 10001) {
           _this.$message({
+            showClose: true,
             type: 'error',
             message: '修改失败!'
           })
@@ -313,6 +326,7 @@ export default {
       _this.form.userTel = _this.$getCookie('userTel')
 
       _this.headImg = this.headImgUrl + _this.form.userImg
+      _this.imgOK=!_this.imgOK
     }
   }
 }
