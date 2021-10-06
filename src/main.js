@@ -22,6 +22,7 @@ Vue.use(VueCropper)
 Vue.prototype.baseUrl = 'http://localhost:8181'
 Vue.prototype.headImgUrl = Vue.prototype.baseUrl + '/uploadImg/head/'
 Vue.prototype.insImgUrl = Vue.prototype.baseUrl + '/uploadImg/ins/'
+Vue.prototype.insTypeImgUrl = Vue.prototype.baseUrl + '/uploadImg/insType/'
 
 Vue.config.productionTip = false
 
