@@ -12,8 +12,6 @@ Vue.prototype.$getCookie = getCookie;
 Vue.prototype.$checkCookie = checkCookie;
 Vue.prototype.$clearCookie = clearCookie;
 
-let Base64 = require('js-base64').Base64
-
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)
 

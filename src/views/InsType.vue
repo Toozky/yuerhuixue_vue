@@ -55,6 +55,7 @@
                 v-for="ins in insList"
                 :key="ins.insId+''">
           <el-card :body-style="{ padding: '0px'}"
+                   style="cursor: pointer"
                    shadow="hover"
                    @click.native="test(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">

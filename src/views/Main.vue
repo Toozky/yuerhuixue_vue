@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div id="menu">
       <div id="menuText">
         <el-menu :default-active="activeIndex2"
@@ -40,7 +41,7 @@
           <el-submenu index="6" style="float: right">
             <template slot="title">
               <span v-if="form.userNickname===''">请登录！　</span>
-              <span v-else>欢迎用户：{{form.userNickname}}　</span>
+              <span v-else>欢迎用户：{{ form.userNickname }}　</span>
               <el-avatar :size="40" :src="circleUrl"/>
             </template>
             <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
@@ -95,7 +96,8 @@
         <el-col style="width: 240px"
                 v-for="ins in insData"
                 :key="ins.insId+''">
-          <el-card :body-style="{ padding: '0px'}" style="margin-top: 20px"
+          <el-card :body-style="{ padding: '0px'}"
+                   style="margin-top: 20px;cursor: pointer"
                    shadow="hover"
                    @click.native="test(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">
@@ -114,7 +116,8 @@
         <el-col style="width: 240px"
                 v-for="instype in insTypeData"
                 :key="instype.typeId+''">
-          <el-card :body-style="{ padding: '0px'}" style="margin-top: 20px"
+          <el-card :body-style="{ padding: '0px'}"
+                   style="margin-top: 20px;cursor: pointer"
                    shadow="hover"
                    @click.native="toInsTypePage(instype.typeId)">
             <img v-bind:src="insTypeImgUrl+instype.typeImg" alt="">
@@ -135,7 +138,7 @@ export default {
   name: "Main",
   data() {
     return {
-      index:'',
+      index: '',
       activeIndex: '1',
       activeIndex2: '1',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
@@ -209,12 +212,12 @@ export default {
   methods: {
     //菜单跳转 ↓
     //跳转至首页
-    Main(){
+    Main() {
       const _this = this
       _this.$router.push('/Main')
     },
     //跳转乐器类型页
-    insType(){
+    insType() {
       const _this = this
       _this.$router.push('/InsType')
     },
@@ -281,7 +284,7 @@ export default {
       });
     },
     //根据乐器类型id跳转至乐器类型页
-    toInsTypePage(typeId){
+    toInsTypePage(typeId) {
       // alert(typeId)
       this.$router.push({
         name: 'InsType',
@@ -346,13 +349,14 @@ export default {
 
 <style scoped>
 /*menu*/
-#menu{
+#menu {
   width: 100%;
   height: 60px;
-  background-color:#545c64;
+  background-color: #545c64;
 }
-#menuText{
-width: 1200px;
+
+#menuText {
+  width: 1200px;
   height: auto;
   margin: 0px auto;
 }
@@ -391,9 +395,10 @@ width: 1200px;
   z-index: 2;
 }
 
-#banner_menu span{
+#banner_menu span {
   color: rgba(255, 255, 2555, 1);
- }
+}
+
 #el-menu-item {
   height: 60px;
   color: white;

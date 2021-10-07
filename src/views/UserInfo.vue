@@ -1,63 +1,102 @@
 <template>
   <div>
-    <el-form label-width="80px">
-      <el-form-item label="头像">
-        <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
-        <el-upload
-            class="avatar-uploader"
-            :action="this.baseUrl+'/user/uploadimg'"
-            :show-file-list="false"
-            :before-upload="beforeAvatarUpload"
-            :on-error="handleAvatarError"
-            :on-success="handleAvatarSuccess">
-          <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-          <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
-        </el-upload>
-      </el-form-item>
-    </el-form>
 
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户ID" v-show="false" prop="userId">
-        <el-input v-model="form.userId" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="用户密码" v-show="false" prop="userPwd">
-        <el-input v-model="form.userPwd" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="创建时间" v-show="false" prop="updateTime">
-        <el-input v-model="form.updateTime" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="更新时间" v-show="false" prop="updateTime">
-        <el-input v-model="form.updateTime" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="用户名" prop="userName">
-        <el-input v-model="form.userName" placeholder="请输入员工姓名"></el-input>
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="userNickname">
-        <el-input v-model="form.userNickname"></el-input>
-      </el-form-item>
-      <el-form-item label="用户性别" prop="userGender">
-        <el-select v-model="form.userGender">
-          <el-option label="男" value="male"></el-option>
-          <el-option label="女" value="female"></el-option>
-          <el-option label="保密" value=''></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="用户年龄" prop="userAge">
-        <el-input v-model.number="form.userAge"></el-input>
-      </el-form-item>
-      <el-form-item label="用户电话" prop="userTel">
-        <el-input v-model.number="form.userTel"></el-input>
-      </el-form-item>
-      <el-form-item label="用户邮箱" prop="userEmail">
-        <el-input v-model="form.userEmail"></el-input>
-      </el-form-item>
+    <div id="menu">
+      <div id="menuText">
+        <el-menu :default-active="activeIndex2"
+                 class="el-menu-demo"
+                 mode="horizontal"
+                 background-color="#545c64"
+                 text-color="#fff"
+                 active-text-color="#ffd04b"
+                 @select="handleSelect">
+          <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
+
+          <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
+
+          <el-menu-item index="3">音乐课程</el-menu-item>
+
+          <el-menu-item index="4">悦耳论坛</el-menu-item>
+
+          <el-menu-item index="5">我的订单</el-menu-item>
+
+          <el-submenu index="6" style="float: right">
+            <template slot="title">
+              <span v-if="form.userNickname===''">请登录！　</span>
+              <span v-else>欢迎用户：{{form.userNickname}}　</span>
+              <el-avatar :size="40" :src="circleUrl"/>
+            </template>
+            <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
+            <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
+            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(form.userId)">修改密码</el-menu-item>
+            <el-menu-item index="6-4" v-show="isLogin">查看购物车</el-menu-item>
+            <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </div>
+    </div>
+
+    <div id="userinfo">
+      <el-form label-width="80px">
+        <el-form-item label="头像">
+          <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
+          <el-upload
+              class="avatar-uploader"
+              :action="this.baseUrl+'/user/uploadimg'"
+              :show-file-list="false"
+              :before-upload="beforeAvatarUpload"
+              :on-error="handleAvatarError"
+              :on-success="handleAvatarSuccess">
+            <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
+            <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="用户ID" v-show="false" prop="userId">
+          <el-input v-model="form.userId" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" v-show="false" prop="userPwd">
+          <el-input v-model="form.userPwd" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" v-show="false" prop="updateTime">
+          <el-input v-model="form.updateTime" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="更新时间" v-show="false" prop="updateTime">
+          <el-input v-model="form.updateTime" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="用户名" prop="userName">
+          <el-input v-model="form.userName" placeholder="请输入员工姓名"></el-input>
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="userNickname">
+          <el-input v-model="form.userNickname"></el-input>
+        </el-form-item>
+        <el-form-item label="用户性别" prop="userGender">
+          <el-select v-model="form.userGender">
+            <el-option label="男" value="male"></el-option>
+            <el-option label="女" value="female"></el-option>
+            <el-option label="保密" value=''></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户年龄" prop="userAge">
+          <el-input v-model.number="form.userAge"></el-input>
+        </el-form-item>
+        <el-form-item label="用户电话" prop="userTel">
+          <el-input v-model.number="form.userTel"></el-input>
+        </el-form-item>
+        <el-form-item label="用户邮箱" prop="userEmail">
+          <el-input v-model="form.userEmail"></el-input>
+        </el-form-item>
 
 
-      <el-form-item>
-        <el-button type="primary" @click="userModify('form')">确认修改</el-button>
-        <el-button @click="resetForm('form')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item>
+          <el-button type="primary" @click="userModify('form')">确认修改</el-button>
+          <el-button @click="resetForm('form')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
   </div>
 </template>
 
@@ -333,5 +372,19 @@ export default {
 </script>
 
 <style scoped>
+/*menu*/
+#menu{
+  width: 100%;
+  height: 60px;
+  background-color:#545c64;
+}
+#menuText{
+  width: 1200px;
+  height: auto;
+  margin: 0px auto;
+}
 
+#userinfo{
+  width: 400px;
+}
 </style>
