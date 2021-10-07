@@ -4,9 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/element.js'
-import $ from './utils/jquery-3.6.0.min.js'
 
-Vue.prototype.$ = $;
 import {setCookie, getCookie, checkCookie, clearCookie} from '@/utils/cookie';
 
 Vue.prototype.$setCookie = setCookie;

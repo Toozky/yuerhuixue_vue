@@ -7,7 +7,7 @@
                  mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b" >
+                 active-text-color="#ffd04b">
           <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
 
           <el-menu-item index="2" @click="insType" @select="handleSelect">乐器心选</el-menu-item>
@@ -21,7 +21,7 @@
           <el-submenu index="6" style="float: right">
             <template slot="title">
               <span v-if="form.userNickname===''">请登录！　</span>
-              <span v-else>欢迎用户：{{form.userNickname}}　</span>
+              <span v-else>欢迎用户：{{ form.userNickname }}　</span>
               <el-avatar :size="40" :src="circleUrl"/>
             </template>
             <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
@@ -64,12 +64,21 @@
             <div id="descText">
               <p>描述：{{ ins.insDesc }}</p>
               <a>价格：</a>
-              <a style="color: red;">{{ins.insPrice+''}}</a>
+              <a style="color: red;">{{ ins.insPrice + '' }}</a>
               <a>&nbsp;元</a>
             </div>
           </el-card>
         </el-col>
       </el-row>
+    </div>
+
+    <div id="pageHand">
+      <el-pagination
+          background
+          layout="total,prev, pager, next,jumper"
+          :total="total"
+          @current-change=page>
+      </el-pagination>
     </div>
 
     <div id="footer">
@@ -81,73 +90,18 @@
 <script>
 export default {
   name: "InsType",
-  data() {
-    return {
-      activeIndex: '2',
-      activeIndex2: '2',
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      isLogin: false,
-      token: '',
-      typeId:'1',
-      activeType:'1',
-      form: {
-        createTime: "",
-        updateTime: "",
-        userAge: "",
-        userEmail: "",
-        userGender: "",
-        userId: "",
-        userImg: "",
-        userName: "",
-        userNickname: "",
-        userPwd: "",
-        userTel: "",
-      },
-      insList: [
-        {
-          insId: 0,
-          insName: '雅马哈 YCL-450/YCL-450N',
-          insImg: '1ce16cb7f01b45a2af6e71a22e8bf7ac.jpg',
-          insDesc: '标准型单簧管',
-          insBrand: '',
-          insPrice: '9999.99',
-          insStock: '',
-          typeId: ''
-        },
-      ],
-      insTypeData: [
-        {
-          typeId: 1,
-          typeName: '木管乐器',
-          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
-          typeDesc: '木管乐器',
-          typeLevel: 1
-        },
-      ],
-      typeList: [
-        {
-          typeId:1,
-          typeName:'木管乐器',
-          typeImg:'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
-          typeDesc: '木管乐器',
-          typeLevel: 1
-        },
-      ],
 
-      rushBuyImg: require('@/assets/img/instype/goodsBackground.jpg'),
-    }
-  },
   methods: {
     //菜单跳转 ↓
     //跳转至首页
-    Main(){
+    Main() {
       const _this = this
       _this.$router.push('/Main')
     },
     //跳转乐器类型页
-    insType(){
+    insType() {
       const _this = this
-      _this.$router.push('/InsType')
+      _this.$router.go(0)
     },
     //菜单跳转 ↑
     // 用户登录
@@ -190,17 +144,20 @@ export default {
       });
     },
     //根据乐器类型id获取乐器列表 ↓
-    getInsList(typeId) {
+    getInsList(typeId,pageNum,pageSize) {
       const _this = this
       axios({
         method: 'get',
         url: '/insType/insByType',
         params: {
-          insTypeId: typeId
+          insTypeId: typeId,
+          pageNum: pageNum,
+          pageSize: pageSize
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
-          _this.insList = resp.data.data
+          _this.insList = resp.data.data.list
+          _this.total = resp.data.data.total
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -213,20 +170,31 @@ export default {
     },
     //乐器类型菜单跳转
     handleClick(tab, event) {
-      console.log(tab.name)
-      if (tab.name==='0'){
-        this.getAllIns()
-      }else {
-        this.getInsList(tab.name)
+      const _this=this
+      // console.log(tab.name)
+      if (tab.name === '0') {
+        this.getAllIns(_this.pageNum,_this.pageSize)
+      } else {
+        _this.typeId=tab.name
+        this.getInsList(_this.typeId,_this.pageNum,_this.pageSize)
       }
     },
     //根据乐器类型id获取乐器列表 ↑
     //查询所有乐器
-    getAllIns(){
+    getAllIns(pageNum, pageSize) {
       const _this = this
-      axios.get('/ins/list').then((resp) => {
+      axios({
+        method: 'get',
+        url: '/ins/list',
+        params: {
+          pageNum: pageNum,
+          pageSize: pageSize
+        }
+      }).then((resp) => {
+        console.log(resp.data)
         if (resp.data.code === 10000) {
-          _this.insList = resp.data.data
+          _this.insList = resp.data.data.list
+          _this.total = resp.data.data.total
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -237,10 +205,17 @@ export default {
         }
       });
     },
+    //分页
+    page(currentPage) {
+      const _this = this
+      _this.currentPage = currentPage
+      this.getAllIns(currentPage, _this.pageSize)
+    },
     test(text) {
       alert(text)
     }
   },
+
   created() {
     const _this = this
     // 获取登录状态
@@ -265,49 +240,112 @@ export default {
     }
 
 
-    _this.typeId=this.$route.params.typeId
+    _this.typeId = this.$route.params.typeId
     //是否从首页点击乐器类型图片跳转至乐器类型页
-    if (_this.typeId==null){
-     /* //获取第一个乐器类型的乐器列表
-      axios.get('/insType/list').then(function (resp) {
-        _this.typeList = resp.data.data
-        _this.getInsList(_this.typeList[0].typeId)
-      });*/
+    if (_this.typeId == null) {
+      /* //获取第一个乐器类型的乐器列表
+       axios.get('/insType/list').then(function (resp) {
+         _this.typeList = resp.data.data
+         _this.getInsList(_this.typeList[0].typeId)
+       });*/
       //获取全部乐器
-      this.getAllIns();
-      _this.activeType='0'
+      this.getAllIns(_this.currentPage, _this.pageSize);
+      _this.activeType = '0'
       axios.get('/insType/list').then(function (resp) {
         _this.typeList = resp.data.data
       });
-    }else {
+    } else {
       //获取相应类型的乐器列表
       axios.get('/insType/list').then(function (resp) {
         _this.typeList = resp.data.data
-        _this.getInsList(_this.typeId)
+        _this.getInsList(_this.typeId,_this.currentPage,_this.pageSize)
       });
-      _this.activeType=_this.typeId+''
+      _this.activeType = _this.typeId + ''
     }
 
 
-  }
+  },
+
+  data() {
+    return {
+      activeIndex: '2',
+      activeIndex2: '2',
+      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      isLogin: false,
+      token: '',
+      typeId: '1',
+      activeType: '1',
+      form: {
+        createTime: "",
+        updateTime: "",
+        userAge: "",
+        userEmail: "",
+        userGender: "",
+        userId: "",
+        userImg: "",
+        userName: "",
+        userNickname: "",
+        userPwd: "",
+        userTel: "",
+      },
+      insList: [
+        {
+          insId: 0,
+          insName: '雅马哈 YCL-450/YCL-450N',
+          insImg: '1ce16cb7f01b45a2af6e71a22e8bf7ac.jpg',
+          insDesc: '标准型单簧管',
+          insBrand: '',
+          insPrice: '9999.99',
+          insStock: '',
+          typeId: ''
+        },
+      ],
+      insTypeData: [
+        {
+          typeId: 1,
+          typeName: '木管乐器',
+          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
+          typeDesc: '木管乐器',
+          typeLevel: 1
+        },
+      ],
+      typeList: [
+        {
+          typeId: 1,
+          typeName: '木管乐器',
+          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
+          typeDesc: '木管乐器',
+          typeLevel: 1
+        },
+      ],
+
+      rushBuyImg: require('@/assets/img/instype/goodsBackground.jpg'),
+      total: 1,
+      currentPage: 1,
+      pageSize: 10,
+      pageNum:1,
+    }
+  },
+
 }
 </script>
 
 <style scoped>
 /*menu*/
-#menu{
+#menu {
   width: 100%;
   height: 60px;
-  background-color:#545c64;
+  background-color: #545c64;
 }
-#menuText{
+
+#menuText {
   width: 1200px;
   height: auto;
   margin: 0px auto;
 }
 
 /*悦耳商城图片div*/
-#rushBuy{
+#rushBuy {
   width: 1200px;
   margin: 40px auto 20px auto;
 }
@@ -331,19 +369,25 @@ export default {
   height: auto;
 }
 
-#insTable img{
+#insTable img {
   width: 220px;
   height: 230px;
 }
 
-#descText{
+#descText {
   font-size: small;
   opacity: 0.7;
   padding: 0 10px 10px 10px;
   float: left;
 }
 
-#footer{
+#pageHand {
+  width: 1200px;
+  height: auto;
+  margin: 0 auto;
+}
+
+#footer {
   width: 100%;
   height: 200px;
 }

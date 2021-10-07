@@ -71,15 +71,13 @@
     </div>
 
     <div id="banner_menu">
-      <div id="banner_menu_background">
-
-      </div>
       <el-row>
         <el-col :span="12">
           <el-menu
               default-active="2"
               class="el-menu-vertical-demo"
-              active-text-color="#ffd04b">
+              active-text-color="#ffd04b"
+              background-color="#545c64">
             <el-menu-item id="el-menu-item"
                           v-for="item in 8"
                           :key="item+''">
@@ -387,17 +385,12 @@ width: 1200px;
 #banner_menu {
   width: 480px;
   margin-top: 75px;
-  /*opacity: 0.5;*/
-  background-color:#545c64;
+  opacity: 0.8;
   left: 17.5%;
   position: relative;
   z-index: 2;
 }
-#banner_menu_background{
-  background-color: black;
-  width: 100%;
-  height: 100%;
-}
+
 #banner_menu span{
   color: rgba(255, 255, 2555, 1);
  }
