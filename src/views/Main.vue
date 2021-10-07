@@ -90,8 +90,8 @@
     </div>
 
     <div id="insTable">
-      <a style="font-size: xx-large">明星单品</a>
-      <el-row :gutter="20" style="margin-left: 0px">
+      <a style="font-size: x-large">明星单品</a>
+      <el-row :gutter="20" style="margin-left: 0">
         <el-col style="width: 240px"
                 v-for="ins in insData"
                 :key="ins.insId+''">
@@ -99,18 +99,18 @@
                    shadow="hover"
                    @click.native="test(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">
-            <div style="margin:0 auto;width: 100%;height:42px;text-align: center;">
-              <h4 style="padding: 0px 5px">{{ ins.insName }}</h4>
+            <div style="margin:0 auto;width: 100%;height:30px;text-align: center;">
+              <h4 style="padding: 0 5px">{{ ins.insName }}</h4>
             </div>
-            <p style="opacity: 0.7;height: 63px;padding: 0px 10px">　{{ ins.insDesc }}</p>
+            <p style="opacity: 0.7;height: 63px;padding: 0 10px">　{{ ins.insDesc }}</p>
           </el-card>
         </el-col>
       </el-row>
     </div>
 
     <div id="insTypeTable">
-      <a style="font-size: xx-large">爆款类型</a>
-      <el-row :gutter="20" style="margin-left: 0px">
+      <a style="font-size: x-large">爆款类型</a>
+      <el-row :gutter="20" style="margin-left: 0">
         <el-col style="width: 240px"
                 v-for="instype in insTypeData"
                 :key="instype.typeId+''">
@@ -118,10 +118,10 @@
                    shadow="hover"
                    @click.native="toInsTypePage(instype.typeId)">
             <img v-bind:src="insTypeImgUrl+instype.typeImg" alt="">
-            <div style="margin:0 auto;width: 100%;height:42px;text-align: center;">
-              <h4 style="padding: 0px 5px">{{ instype.typeName }}</h4>
+            <div style="margin:0 auto;width: 100%;height:30px;text-align: center;">
+              <h4 style="padding: 0 5px">{{ instype.typeName }}</h4>
             </div>
-            <p style="opacity: 0.7;height: 63px;padding: 0px 10px">　{{ instype.typeDesc }}</p>
+            <p style="opacity: 0.7;height: 63px;padding: 0 10px">　{{ instype.typeDesc }}</p>
           </el-card>
         </el-col>
       </el-row>
