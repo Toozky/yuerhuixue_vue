@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div id="menu">
       <div id="menuText">
         <el-menu :default-active="activeIndex2"
@@ -92,6 +93,83 @@
 export default {
   name: "InsType",
 
+  data() {
+    return {
+      //菜单活动标签索引
+      activeIndex: '2',
+      activeIndex2: '2',
+      // 菜单头像
+      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      //登录状态 切换菜单用户功能显示
+      isLogin: false,
+      token: '',
+      //乐器类型
+      typeId: '1',
+      //类型菜单 活动标签索引
+      activeType: '1',
+      //用户信息表
+      form: {
+        createTime: "",
+        updateTime: "",
+        userAge: "",
+        userEmail: "",
+        userGender: "",
+        userId: "",
+        userImg: "",
+        userName: "",
+        userNickname: "",
+        userPwd: "",
+        userTel: "",
+      },
+      //乐器数组
+      insList: [
+        {
+          insId: 0,
+          insName: '雅马哈 YCL-450/YCL-450N',
+          insImg: '1ce16cb7f01b45a2af6e71a22e8bf7ac.jpg',
+          insDesc: '标准型单簧管',
+          insBrand: '',
+          insPrice: '9999.99',
+          insStock: '',
+          typeId: ''
+        },
+      ],
+      //乐器类型数组
+      insTypeData: [
+        {
+          typeId: 1,
+          typeName: '木管乐器',
+          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
+          typeDesc: '木管乐器',
+          typeLevel: 1
+        },
+      ],
+      typeList: [
+        {
+          typeId: 1,
+          typeName: '木管乐器',
+          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
+          typeDesc: '木管乐器',
+          typeLevel: 1
+        },
+      ],
+      //抢购图片 banner
+      rushBuyImg: require('@/assets/img/instype/goodsBackground.jpg'),
+
+      //分页 ↓
+      //查询数据总数
+      total: 1,
+      //分页页数
+      currentPage: 1,
+      //每页数据个数
+      pageSize: 10,
+      //分页 ↑
+
+      //第一页 点击分类菜单调用pageNum（不写这个变量，方法里直接传1也可以）
+      pageNum:1,
+    }
+  },
+
   methods: {
     //菜单跳转 ↓
     //跳转至首页
@@ -105,6 +183,8 @@ export default {
       _this.$router.go(0)
     },
     //菜单跳转 ↑
+
+    //菜单用户方法 ↓
     // 用户登录
     userLogin() {
       const _this = this
@@ -126,10 +206,6 @@ export default {
       const _this = this
       _this.$router.push('/UserInfo')
     },
-    //菜单跳转
-    handleSelect(key, keyPath) {
-      // console.log(key, keyPath);
-    },
     //用户密码修改
     userModifyPwd(id) {
       const _this = this
@@ -144,7 +220,9 @@ export default {
         }
       });
     },
-    //根据乐器类型id获取乐器列表 ↓
+    //菜单用户方法 ↑
+
+    //根据乐器类型id分页获取乐器列表 ↓
     getInsList(typeId,pageNum,pageSize) {
       const _this = this
       axios({
@@ -180,8 +258,9 @@ export default {
         this.getInsList(_this.typeId,_this.pageNum,_this.pageSize)
       }
     },
-    //根据乐器类型id获取乐器列表 ↑
-    //查询所有乐器
+    //根据乐器类型id分页获取乐器列表 ↑
+
+    //分页查询所有乐器
     getAllIns(pageNum, pageSize) {
       const _this = this
       axios({
@@ -192,7 +271,7 @@ export default {
           pageSize: pageSize
         }
       }).then((resp) => {
-        console.log(resp.data)
+        // console.log(resp.data)
         if (resp.data.code === 10000) {
           _this.insList = resp.data.data.list
           _this.total = resp.data.data.total
@@ -206,7 +285,8 @@ export default {
         }
       });
     },
-    //分页
+
+    //分页（页码部分）
     page(currentPage) {
       const _this = this
       _this.currentPage = currentPage
@@ -234,15 +314,14 @@ export default {
       _this.form.userNickname = _this.$getCookie('userNickname')
       _this.form.userPwd = _this.$getCookie('userPwd')
       _this.form.userTel = _this.$getCookie('userTel')
-
+      //菜单显示头像
       _this.circleUrl = this.headImgUrl + _this.form.userImg
-
+      //获取用户id
       _this.id = _this.form.userId
     }
 
-
-    _this.typeId = this.$route.params.typeId
     //是否从首页点击乐器类型图片跳转至乐器类型页
+    _this.typeId = this.$route.params.typeId
     if (_this.typeId == null) {
       /* //获取第一个乐器类型的乐器列表
        axios.get('/insType/list').then(function (resp) {
@@ -264,68 +343,6 @@ export default {
       _this.activeType = _this.typeId + ''
     }
 
-
-  },
-
-  data() {
-    return {
-      activeIndex: '2',
-      activeIndex2: '2',
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      isLogin: false,
-      token: '',
-      typeId: '1',
-      activeType: '1',
-      form: {
-        createTime: "",
-        updateTime: "",
-        userAge: "",
-        userEmail: "",
-        userGender: "",
-        userId: "",
-        userImg: "",
-        userName: "",
-        userNickname: "",
-        userPwd: "",
-        userTel: "",
-      },
-      insList: [
-        {
-          insId: 0,
-          insName: '雅马哈 YCL-450/YCL-450N',
-          insImg: '1ce16cb7f01b45a2af6e71a22e8bf7ac.jpg',
-          insDesc: '标准型单簧管',
-          insBrand: '',
-          insPrice: '9999.99',
-          insStock: '',
-          typeId: ''
-        },
-      ],
-      insTypeData: [
-        {
-          typeId: 1,
-          typeName: '木管乐器',
-          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
-          typeDesc: '木管乐器',
-          typeLevel: 1
-        },
-      ],
-      typeList: [
-        {
-          typeId: 1,
-          typeName: '木管乐器',
-          typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
-          typeDesc: '木管乐器',
-          typeLevel: 1
-        },
-      ],
-
-      rushBuyImg: require('@/assets/img/instype/goodsBackground.jpg'),
-      total: 1,
-      currentPage: 1,
-      pageSize: 10,
-      pageNum:1,
-    }
   },
 
 }

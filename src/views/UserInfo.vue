@@ -8,8 +8,8 @@
                  mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
+
           <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
 
           <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
@@ -36,65 +36,74 @@
       </div>
     </div>
 
+    <div id="userLoginImg">
+      <img :src="userLoginImg">
+    </div>
+
     <div id="userinfo">
-      <el-form label-width="80px">
-        <el-form-item label="头像">
-          <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
-          <el-upload
-              class="avatar-uploader"
-              :action="this.baseUrl+'/user/uploadimg'"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-              :on-error="handleAvatarError"
-              :on-success="handleAvatarSuccess">
-            <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-            <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
-          </el-upload>
-        </el-form-item>
-      </el-form>
 
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户ID" v-show="false" prop="userId">
-          <el-input v-model="form.userId" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="用户密码" v-show="false" prop="userPwd">
-          <el-input v-model="form.userPwd" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间" v-show="false" prop="updateTime">
-          <el-input v-model="form.updateTime" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="更新时间" v-show="false" prop="updateTime">
-          <el-input v-model="form.updateTime" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入员工姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="用户昵称" prop="userNickname">
-          <el-input v-model="form.userNickname"></el-input>
-        </el-form-item>
-        <el-form-item label="用户性别" prop="userGender">
-          <el-select v-model="form.userGender">
-            <el-option label="男" value="male"></el-option>
-            <el-option label="女" value="female"></el-option>
-            <el-option label="保密" value=''></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="用户年龄" prop="userAge">
-          <el-input v-model.number="form.userAge"></el-input>
-        </el-form-item>
-        <el-form-item label="用户电话" prop="userTel">
-          <el-input v-model.number="form.userTel"></el-input>
-        </el-form-item>
-        <el-form-item label="用户邮箱" prop="userEmail">
-          <el-input v-model="form.userEmail"></el-input>
-        </el-form-item>
+      <el-card shadow="hover">
+
+        <el-form label-width="80px">
+          <el-form-item label="头像">
+            <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
+            <el-upload
+                class="avatar-uploader"
+                :action="this.baseUrl+'/user/uploadimg'"
+                :show-file-list="false"
+                :before-upload="beforeAvatarUpload"
+                :on-error="handleAvatarError"
+                :on-success="handleAvatarSuccess">
+              <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
+              <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="用户ID" v-show="false" prop="userId">
+            <el-input v-model="form.userId" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户密码" v-show="false" prop="userPwd">
+            <el-input v-model="form.userPwd" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="创建时间" v-show="false" prop="updateTime">
+            <el-input v-model="form.updateTime" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="更新时间" v-show="false" prop="updateTime">
+            <el-input v-model="form.updateTime" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户名" prop="userName">
+            <el-input v-model="form.userName" placeholder="请输入员工姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="用户昵称" prop="userNickname">
+            <el-input v-model="form.userNickname"></el-input>
+          </el-form-item>
+          <el-form-item label="用户性别" prop="userGender">
+            <el-select v-model="form.userGender">
+              <el-option label="男" value="male"></el-option>
+              <el-option label="女" value="female"></el-option>
+              <el-option label="保密" value=''></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="用户年龄" prop="userAge">
+            <el-input v-model.number="form.userAge"></el-input>
+          </el-form-item>
+          <el-form-item label="用户电话" prop="userTel">
+            <el-input v-model.number="form.userTel"></el-input>
+          </el-form-item>
+          <el-form-item label="用户邮箱" prop="userEmail">
+            <el-input v-model="form.userEmail"></el-input>
+          </el-form-item>
 
 
-        <el-form-item>
-          <el-button type="primary" @click="userModify('form')">确认修改</el-button>
-          <el-button @click="resetForm('form')">重置</el-button>
-        </el-form-item>
-      </el-form>
+          <el-form-item>
+            <el-button type="primary" @click="userModify('form')">确认修改</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+
     </div>
 
   </div>
@@ -105,7 +114,9 @@ import {setCookie} from "@/utils/cookie";
 
 export default {
   name: "UserInfo",
+
   data() {
+    //录入信息自定义验证规则 ↓
     var checkUserAge = (rule, value, callback) => {
       setTimeout(() => {
         if (value === '') {
@@ -142,12 +153,22 @@ export default {
 
       }, 1000);
     };
+    //录入信息自定义验证规则 ↑
     return {
+      //菜单活动标签索引
+      activeIndex2: '6-1',
+      //登录状态 切换菜单用户功能显示
       isLogin: false,
       token: '',
+      //头像回显
       headImg: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+      //用户登录页背景
+      userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
+      //头像是否修改的中间变量
       newImg: '',
+      //切换确认上传按钮可用状态
       imgOK: false,
+      //用户信息表
       form: {
         createTime: '',
         updateTime: '',
@@ -161,6 +182,7 @@ export default {
         userPwd: '',
         userTel: '',
       },
+      //验证规则绑定
       rules: {
         userAge: [
           {validator: checkUserAge, trigger: 'blur'}
@@ -183,7 +205,60 @@ export default {
       }
     }
   },
+
   methods: {
+    //菜单跳转 ↓
+    //跳转至首页
+    Main() {
+      const _this = this
+      _this.$router.push('/Main')
+    },
+    //跳转乐器类型页
+    insType() {
+      const _this = this
+      _this.$router.push('/InsType')
+    },
+    //菜单跳转 ↑
+
+    //菜单用户方法 ↓
+    // 用户登录
+    userLogin() {
+      const _this = this
+      _this.$router.push('/UserLogin')
+    },
+    //用户注销登录
+    userLogout() {
+      const _this = this
+      _this.$message({
+        showClose: true,
+        message: '用户退出登录!',
+      });
+      _this.$clearCookie('token')
+      _this.$clearCookie('userId')
+      _this.$router.push('/Main')
+    },
+    //用户信息修改
+    userInfo() {
+      const _this = this
+      _this.$router.push('/UserInfo')
+    },
+    //用户密码修改
+    userModifyPwd(id) {
+      const _this = this
+      // console.log(_this.id)
+      this.$router.push({
+        name: 'UserModifyPwd',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: _this.id,
+        }
+      });
+    },
+    //菜单用户方法 ↑
+
+    //重置表格
     resetForm(form) {
       const _this = this
       _this.form.createTime = _this.$getCookie('createTime')
@@ -200,6 +275,7 @@ export default {
 
       _this.headImg = this.headImgUrl + _this.form.userImg
     },
+    //用户信息修改
     userModify(form) {
       const _this = this
       _this.$refs[form].validate((valid) => {
@@ -269,6 +345,8 @@ export default {
       });
 
     },
+
+    //头像上传错误捕获
     handleAvatarError(err, file, fileList){
       console.log(err.status)
       if (err.status===500){
@@ -280,12 +358,14 @@ export default {
         _this.imgOK=!_this.imgOK
       }
     },
+    //头像上传回显
     handleAvatarSuccess(res, file) {
       const _this = this
       _this.imgOK=!_this.imgOK
       _this.headImg = this.headImgUrl + res.data
       _this.newImg = res.data
     },
+    //头像上传检查
     beforeAvatarUpload(file) {
       const isJPG = file.type === ('image/jpeg' || 'image/jpg' || 'image/png');
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -298,9 +378,10 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    //确认修改头像
     submitHead() {
       const _this = this;
-      console.log(_this.newImg)
+      // console.log(_this.newImg)
       _this.form.userImg=_this.newImg
 
       axios({
@@ -345,9 +426,11 @@ export default {
         }
       });
 
-    }
+    },
   },
+
   created() {
+    //检测登录状态
     const _this = this
     _this.token = _this.$getCookie('token')
     if (_this.token !== '') {
@@ -364,10 +447,15 @@ export default {
       _this.form.userPwd = _this.$getCookie('userPwd')
       _this.form.userTel = _this.$getCookie('userTel')
 
+      //上传回显头像
       _this.headImg = this.headImgUrl + _this.form.userImg
       _this.imgOK=!_this.imgOK
+
+      //菜单显示头像
+      _this.circleUrl = this.headImgUrl + _this.form.userImg
     }
   }
+
 }
 </script>
 
@@ -384,7 +472,24 @@ export default {
   margin: 0px auto;
 }
 
+/*背景图片*/
+#userLoginImg{
+  width: 100%;
+  margin-top: 150px;
+  position: absolute;
+  z-index: 1;
+}
+#userLoginImg img{
+  width: 100%;
+}
+
+/*信息修改div*/
 #userinfo{
+  position: relative;
+  z-index: 2;
   width: 400px;
+  margin-top: 75px;
+  margin-right: 150px;
+  float: right;
 }
 </style>

@@ -1,69 +1,84 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <!--      <el-form-item label="头像">
-              <el-image :src="form.userImg" prop="userImg"></el-image>
-            </el-form-item>
-            <el-form-item>
-              <el-button @click="userUpdateImg()">上传头像</el-button>
-            </el-form-item>-->
+
+    <div id="userLoginImg">
+      <img :src="userLoginImg">
+    </div>
+
+    <div id="userAdd">
+      <el-card shadow="hover">
+        <div style="text-align: center;opacity: 0.75;margin: 10px auto 40px auto;">
+          <a style="font-size: x-large;">注　册</a>
+        </div>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <!--      <el-form-item label="头像">
+                  <el-image :src="form.userImg" prop="userImg"></el-image>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="userUpdateImg()">上传头像</el-button>
+                </el-form-item>-->
 
 
-      <!--      <el-form-item label="用户ID" v-show="false" prop="userId">
-              <el-input v-model="form.userId" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="用户密码" v-show="false" prop="userPwd">
-              <el-input v-model="form.userPwd" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="创建时间" v-show="false" prop="updateTime">
-              <el-input v-model="form.updateTime" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="更新时间" v-show="false" prop="updateTime">
-              <el-input v-model="form.updateTime" disabled></el-input>
-            </el-form-item>-->
-      <el-form-item label="用户名" prop="userName">
-        <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="userPwd">
-        <el-input type="password" v-model="form.userPwd" placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码" prop="userPwd2">
-        <el-input type="password" v-model="form.userPwd2" placeholder="请再输入一次密码"></el-input>
-      </el-form-item>
+          <!--      <el-form-item label="用户ID" v-show="false" prop="userId">
+                  <el-input v-model="form.userId" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码" v-show="false" prop="userPwd">
+                  <el-input v-model="form.userPwd" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="创建时间" v-show="false" prop="updateTime">
+                  <el-input v-model="form.updateTime" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="更新时间" v-show="false" prop="updateTime">
+                  <el-input v-model="form.updateTime" disabled></el-input>
+                </el-form-item>-->
+          <el-form-item label="用户名" prop="userName">
+            <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="userPwd">
+            <el-input type="password" v-model="form.userPwd" placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="userPwd2">
+            <el-input type="password" v-model="form.userPwd2" placeholder="请再输入一次密码"></el-input>
+          </el-form-item>
 
-      <!--      <el-form-item label="用户昵称" prop="userNickname">
-              <el-input v-model="form.userNickname"></el-input>
-            </el-form-item>
-            <el-form-item label="用户性别" prop="userGender">
-              <el-select v-model="form.userGender">
-                <el-option label="男" value="male"></el-option>
-                <el-option label="女" value="female"></el-option>
-                <el-option label="保密" value=''></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="用户年龄" prop="userAge">
-              <el-input v-model.number="form.userAge"></el-input>
-            </el-form-item>
-            <el-form-item label="用户电话" prop="userTel">
-              <el-input v-model.number="form.userTel"></el-input>
-            </el-form-item>
-            <el-form-item label="用户邮箱" prop="userEmail">
-              <el-input v-model="form.userEmail"></el-input>
-            </el-form-item>-->
+          <!--      <el-form-item label="用户昵称" prop="userNickname">
+                  <el-input v-model="form.userNickname"></el-input>
+                </el-form-item>
+                <el-form-item label="用户性别" prop="userGender">
+                  <el-select v-model="form.userGender">
+                    <el-option label="男" value="male"></el-option>
+                    <el-option label="女" value="female"></el-option>
+                    <el-option label="保密" value=''></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="用户年龄" prop="userAge">
+                  <el-input v-model.number="form.userAge"></el-input>
+                </el-form-item>
+                <el-form-item label="用户电话" prop="userTel">
+                  <el-input v-model.number="form.userTel"></el-input>
+                </el-form-item>
+                <el-form-item label="用户邮箱" prop="userEmail">
+                  <el-input v-model="form.userEmail"></el-input>
+                </el-form-item>-->
 
 
-      <el-form-item>
-        <el-button type="primary" @click="userAdd('form')">确认注册</el-button>
-        <el-button @click="resetForm('form')">重置</el-button>
-      </el-form-item>
-    </el-form>
+          <el-form-item>
+            <el-button type="primary" @click="userAdd('form')">确认注册</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+
   </div>
 </template>
 
 <script>
 export default {
   name: "UserAdd",
+
   data() {
+    //录入信息自定义验证规则 ↓
     var checkUserAge = (rule, value, callback) => {
       setTimeout(() => {
         if (value === '') {
@@ -119,9 +134,14 @@ export default {
         callback();
       }
     };
+    //录入信息自定义验证规则 ↑
     return {
+      //登录状态 切换菜单用户功能显示
       isLogin: false,
       token: '',
+      //用户登录页背景
+      userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
+      //用户信息表
       form: {
         createTime: '',
         updateTime: '',
@@ -136,6 +156,7 @@ export default {
         userPwd2:'',
         userTel: '',
       },
+      //验证规则绑定
       rules: {
         userAge: [
           {validator: checkUserAge, trigger: 'blur'}
@@ -166,7 +187,9 @@ export default {
       }
     }
   },
+
   methods: {
+    //用户注册
     userAdd(form) {
       const _this = this
       _this.$refs[form].validate((valid) => {
@@ -209,9 +232,29 @@ export default {
       })
     }
   }
+
 }
 </script>
 
 <style scoped>
+/*背景图片*/
+#userLoginImg{
+  width: 100%;
+  margin-top: 150px;
+  position: absolute;
+  z-index: 1;
+}
+#userLoginImg img{
+  width: 100%;
+}
 
+/*用户注册div*/
+#userAdd{
+  position: relative;
+  z-index: 2;
+  width: 400px;
+  margin-top: 250px;
+  margin-right: 150px;
+  float: right;
+}
 </style>

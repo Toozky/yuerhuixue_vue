@@ -8,8 +8,7 @@
                  mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
           <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
 
           <!--
@@ -139,11 +138,15 @@ export default {
   data() {
     return {
       index: '',
+      //菜单活动标签索引
       activeIndex: '1',
       activeIndex2: '1',
+      // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      //登录状态 切换菜单用户功能显示
       isLogin: false,
       token: '',
+      //用户信息表
       form: {
         createTime: "",
         updateTime: "",
@@ -157,11 +160,13 @@ export default {
         userPwd: "",
         userTel: "",
       },
+      //banner轮播图数组
       bannerSrc: [
         {bannerUrl: require('@/assets/img/banner/banner0.jpg')},
         {bannerUrl: require('@/assets/img/banner/banner1.jpg')},
         {bannerUrl: require('@/assets/img/banner/banner2.jpg')},
         {bannerUrl: require('@/assets/img/banner/banner3.jpg')},],
+      //5条乐器数组
       insData: [
         {
           insId: 0,
@@ -174,6 +179,7 @@ export default {
           typeId: ''
         },
       ],
+      //5条乐器类型数组
       insTypeData: [
         {
           typeId: 0,
@@ -183,6 +189,7 @@ export default {
           typeLevel: 1
         },
       ],
+      //乐器类型数组
       insTypeList: [
         {
           typeId: 0,
@@ -192,6 +199,7 @@ export default {
           typeLevel: 1
         },
       ],
+      //乐器数组
       insList: [
         {
           insId: 1,
@@ -204,8 +212,6 @@ export default {
           typeId: ''
         },
       ]
-
-
     }
   },
 
@@ -214,7 +220,7 @@ export default {
     //跳转至首页
     Main() {
       const _this = this
-      _this.$router.push('/Main')
+      _this.$router.go(0)
     },
     //跳转乐器类型页
     insType() {
@@ -222,6 +228,8 @@ export default {
       _this.$router.push('/InsType')
     },
     //菜单跳转 ↑
+
+    //菜单用户方法 ↓
     // 用户登录
     userLogin() {
       const _this = this
@@ -243,10 +251,6 @@ export default {
       const _this = this
       _this.$router.push('/UserInfo')
     },
-    //菜单跳转
-    handleSelect(key, keyPath) {
-      // console.log(key, keyPath);
-    },
     //用户密码修改
     userModifyPwd(id) {
       const _this = this
@@ -261,6 +265,8 @@ export default {
         }
       });
     },
+    //菜单用户方法 ↑
+
     //根据乐器类型id查找乐器
     getInsList(typeId) {
       const _this = this
@@ -323,9 +329,9 @@ export default {
       _this.form.userNickname = _this.$getCookie('userNickname')
       _this.form.userPwd = _this.$getCookie('userPwd')
       _this.form.userTel = _this.$getCookie('userTel')
-
+      //菜单显示头像
       _this.circleUrl = this.headImgUrl + _this.form.userImg
-
+      //获取用户id
       _this.id = _this.form.userId
     }
     // 获取乐器单品数据

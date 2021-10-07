@@ -3,6 +3,7 @@
     <div id="userLoginImg">
       <img :src="userLoginImg">
     </div>
+
     <div id="userLogin">
       <el-card shadow="hover">
         <div style="text-align: center;opacity: 0.75;margin: 20px auto;">
@@ -23,9 +24,11 @@
         </el-form>
       </el-card>
     </div>
+
     <div id="logo">
       <img :src="logoImg">
     </div>
+
   </div>
 
 </template>
@@ -36,7 +39,7 @@ import {setCookie} from "@/utils/cookie";
 export default {
   name: "UserLogin",
   data() {
-
+    //录入信息自定义验证规则 ↓
     var validateText = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入账号'));
@@ -47,7 +50,6 @@ export default {
         callback();
       }
     };
-
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
@@ -58,12 +60,14 @@ export default {
         callback();
       }
     };
-
+    //录入信息自定义验证规则 ↑
     return {
+      // 登录表
       ruleForm: {
         text: '',
         pass: ''
       },
+      //验证规则绑定
       rules: {
         text: [
           {validator: validateText, trigger: 'blur'}
@@ -72,11 +76,14 @@ export default {
           {validator: validatePass, trigger: 'blur'}
         ]
       },
+      //用户登录页背景
       userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
-      logoImg:require('@/assets/img/login/logo.png'),
+      //logo图
+      logoImg:require('@/assets/img/login/logo-words.png'),
     };
   },
   methods: {
+    //用户登录
     userLogin(formName) {
       const _this = this
       this.$refs[formName].validate((valid) => {
@@ -134,9 +141,11 @@ export default {
         }
       });
     },
+    //重置登录表
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    //用户注册
     userAdd() {
       const _this = this
       _this.$router.push('/UserAdd')
@@ -144,16 +153,17 @@ export default {
   },
   created() {
     //检测登录状态
-    const _this = this
+    /*const _this = this
     _this.token = _this.$getCookie('token')
     if (_this.token !== '') {
       this.$router.push('/Main')
-    }
+    }*/
   }
 }
 </script>
 
 <style scoped>
+/*背景图片*/
 #userLoginImg{
   width: 100%;
   margin-top: 150px;
@@ -163,6 +173,8 @@ export default {
 #userLoginImg img{
   width: 100%;
 }
+
+/*登录div*/
 #userLogin{
   width: 400px;
   height: 600px;
@@ -171,7 +183,10 @@ export default {
   position: fixed;
   z-index: 2;
 }
+
+/*左上logo*/
 #logo{
+  margin: 10px;
   width: 75px;
   position: fixed;
   z-index: 3;
