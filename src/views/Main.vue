@@ -71,12 +71,14 @@
     </div>
 
     <div id="banner_menu">
+      <div id="banner_menu_background">
+
+      </div>
       <el-row>
         <el-col :span="12">
           <el-menu
               default-active="2"
               class="el-menu-vertical-demo"
-              background-color="#545c64"
               active-text-color="#ffd04b">
             <el-menu-item id="el-menu-item"
                           v-for="item in 8"
@@ -302,6 +304,7 @@ export default {
       alert(text)
     }
   },
+
   created() {
     const _this = this
     // 获取登录状态
@@ -384,12 +387,20 @@ width: 1200px;
 #banner_menu {
   width: 480px;
   margin-top: 75px;
-  opacity: 0.75;
+  /*opacity: 0.5;*/
+  background-color:#545c64;
   left: 17.5%;
   position: relative;
   z-index: 2;
 }
-
+#banner_menu_background{
+  background-color: black;
+  width: 100%;
+  height: 100%;
+}
+#banner_menu span{
+  color: rgba(255, 255, 2555, 1);
+ }
 #el-menu-item {
   height: 60px;
   color: white;

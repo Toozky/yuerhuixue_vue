@@ -141,6 +141,14 @@ export default {
       const _this = this
       _this.$router.push('/UserAdd')
     },
+  },
+  created() {
+    //检测登录状态
+    const _this = this
+    _this.token = _this.$getCookie('token')
+    if (_this.token !== '') {
+      this.$router.push('/Main')
+    }
   }
 }
 </script>

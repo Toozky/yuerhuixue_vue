@@ -40,6 +40,7 @@
 
     <div id="typeMenu">
       <el-tabs v-model="activeType" @tab-click="handleClick">
+        <el-tab-pane label="全部" name="0"></el-tab-pane>
         <el-tab-pane v-for="instype in typeList"
                      :label="instype.typeName"
                      :name="instype.typeId+''"
@@ -50,10 +51,10 @@
 
     <div id="insTable">
       <el-row :gutter="20" style="margin-left: 0px">
-        <el-col style="width: 240px;height: 440px"
+        <el-col style="width: 240px;height: 420px;"
                 v-for="ins in insList"
                 :key="ins.insId+''">
-          <el-card :body-style="{ padding: '0px'}" style="margin-top: 20px"
+          <el-card :body-style="{ padding: '0px'}"
                    shadow="hover"
                    @click.native="test(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">
@@ -71,6 +72,9 @@
       </el-row>
     </div>
 
+    <div id="footer">
+
+    </div>
   </div>
 </template>
 
@@ -209,10 +213,30 @@ export default {
     },
     //乐器类型菜单跳转
     handleClick(tab, event) {
-      this.getInsList(tab.name)
+      console.log(tab.name)
+      if (tab.name==='0'){
+        this.getAllIns()
+      }else {
+        this.getInsList(tab.name)
+      }
     },
     //根据乐器类型id获取乐器列表 ↑
-
+    //查询所有乐器
+    getAllIns(){
+      const _this = this
+      axios.get('/ins/list').then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.insList = resp.data.data
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            message: '查询失败！',
+            type: 'error'
+          });
+        }
+      });
+    },
     test(text) {
       alert(text)
     }
@@ -244,10 +268,16 @@ export default {
     _this.typeId=this.$route.params.typeId
     //是否从首页点击乐器类型图片跳转至乐器类型页
     if (_this.typeId==null){
-      //获取第一个乐器类型的乐器列表
+     /* //获取第一个乐器类型的乐器列表
       axios.get('/insType/list').then(function (resp) {
         _this.typeList = resp.data.data
         _this.getInsList(_this.typeList[0].typeId)
+      });*/
+      //获取全部乐器
+      this.getAllIns();
+      _this.activeType='0'
+      axios.get('/insType/list').then(function (resp) {
+        _this.typeList = resp.data.data
       });
     }else {
       //获取相应类型的乐器列表
@@ -309,8 +339,12 @@ export default {
 #descText{
   font-size: small;
   opacity: 0.7;
-  padding: 0 10px;
+  padding: 0 10px 10px 10px;
   float: left;
-  padding-bottom: 10px;
+}
+
+#footer{
+  width: 100%;
+  height: 200px;
 }
 </style>
