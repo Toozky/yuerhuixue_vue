@@ -153,11 +153,11 @@ export default {
   },
   created() {
     //检测登录状态
-    /*const _this = this
+    const _this = this
     _this.token = _this.$getCookie('token')
     if (_this.token !== '') {
       this.$router.push('/Main')
-    }*/
+    }
   }
 }
 </script>
