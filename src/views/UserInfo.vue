@@ -28,8 +28,8 @@
             </template>
             <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
             <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
-            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(form.userId)">修改密码</el-menu-item>
-            <el-menu-item index="6-4" v-show="isLogin">查看购物车</el-menu-item>
+            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
+            <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
             <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
           </el-submenu>
         </el-menu>
@@ -252,7 +252,20 @@ export default {
           token: _this.token
         },
         params: {
-          id: _this.id,
+          id: id,
+        }
+      });
+    },
+    //购物车页面
+    userShoppingCart(userId){
+      const _this = this
+      this.$router.push({
+        name: 'ShoppingCart',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: userId,
         }
       });
     },
@@ -453,6 +466,13 @@ export default {
 
       //菜单显示头像
       _this.circleUrl = this.headImgUrl + _this.form.userImg
+    }else {
+      this.$router.push('/UserLogin');
+      _this.$message({
+        showClose: true,
+        type: 'info',
+        message: '您未登录，请先登录'
+      });
     }
   }
 

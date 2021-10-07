@@ -45,8 +45,8 @@
             </template>
             <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
             <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
-            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(form.userId)">修改密码</el-menu-item>
-            <el-menu-item index="6-4" v-show="isLogin">查看购物车</el-menu-item>
+            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
+            <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
             <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
           </el-submenu>
         </el-menu>
@@ -98,7 +98,7 @@
           <el-card :body-style="{ padding: '0px'}"
                    style="margin-top: 20px;cursor: pointer"
                    shadow="hover"
-                   @click.native="test(ins.insId)">
+                   @click.native="GoodBuy(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">
             <div style="margin:0 auto;width: 100%;height:30px;text-align: center;">
               <h4 style="padding: 0 5px">{{ ins.insName }}</h4>
@@ -110,23 +110,28 @@
     </div>
 
     <div id="insTypeTable">
-      <a style="font-size: x-large">爆款类型</a>
-      <el-row :gutter="20" style="margin-left: 0">
-        <el-col style="width: 240px"
-                v-for="instype in insTypeData"
-                :key="instype.typeId+''">
-          <el-card :body-style="{ padding: '0px'}"
-                   style="margin-top: 20px;cursor: pointer"
-                   shadow="hover"
-                   @click.native="toInsTypePage(instype.typeId)">
-            <img v-bind:src="insTypeImgUrl+instype.typeImg" alt="">
-            <div style="margin:0 auto;width: 100%;height:30px;text-align: center;">
-              <h4 style="padding: 0 5px">{{ instype.typeName }}</h4>
-            </div>
-            <p style="opacity: 0.7;height: 63px;padding: 0 10px">　{{ instype.typeDesc }}</p>
-          </el-card>
-        </el-col>
-      </el-row>
+      <div style="height: 40px;">
+        <a style="font-size: x-large;float: left">爆款类型</a>
+        <el-button type="text" style="float: right;color: black;margin-right: 20px" @click="insType">查看更多</el-button>
+      </div>
+      <div>
+        <el-row :gutter="20" style="margin-left: 0">
+          <el-col style="width: 240px"
+                  v-for="instype in insTypeData"
+                  :key="instype.typeId+''">
+            <el-card :body-style="{ padding: '0px'}"
+                     style="margin-top: 20px;cursor: pointer"
+                     shadow="hover"
+                     @click.native="toInsTypePage(instype.typeId)">
+              <img v-bind:src="insTypeImgUrl+instype.typeImg" alt="">
+              <div style="margin:0 auto;width: 100%;height:30px;text-align: center;">
+                <h4 style="padding: 0 5px">{{ instype.typeName }}</h4>
+              </div>
+              <p style="opacity: 0.7;height: 63px;padding: 0 10px">　{{ instype.typeDesc }}</p>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
     </div>
 
   </div>
@@ -261,7 +266,20 @@ export default {
           token: _this.token
         },
         params: {
-          id: _this.id,
+          id: id,
+        }
+      });
+    },
+    //购物车页面
+    userShoppingCart(userId){
+      const _this = this
+      this.$router.push({
+        name: 'ShoppingCart',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: userId,
         }
       });
     },
@@ -298,6 +316,20 @@ export default {
           typeId: typeId
         }
       })
+    },
+
+    //跳转至购买页
+    GoodBuy(insId){
+      const _this = this
+      this.$router.push({
+        name: 'GoodBuy',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          insId: insId,
+        }
+      });
     },
     onSubmit() {
       console.log('submit!');

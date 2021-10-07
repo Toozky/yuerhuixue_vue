@@ -11,7 +11,7 @@
                  active-text-color="#ffd04b">
           <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
 
-          <el-menu-item index="2" @click="insType" @select="handleSelect">乐器心选</el-menu-item>
+          <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
 
           <el-menu-item index="3">悦耳论坛</el-menu-item>
 
@@ -27,8 +27,8 @@
             </template>
             <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
             <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
-            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(form.userId)">修改密码</el-menu-item>
-            <el-menu-item index="6-4" v-show="isLogin">查看购物车</el-menu-item>
+            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
+            <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
             <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
           </el-submenu>
         </el-menu>
@@ -58,7 +58,7 @@
           <el-card :body-style="{ padding: '0px'}"
                    style="cursor: pointer"
                    shadow="hover"
-                   @click.native="test(ins.insId)">
+                   @click.native="GoodBuy(ins.insId)">
             <img v-bind:src="insImgUrl+ins.insImg" alt="">
             <div style="margin:0px auto;width: 100%;">
               <h5 style="padding: 0px 10px;">名称：{{ ins.insName }}</h5>
@@ -216,7 +216,20 @@ export default {
           token: _this.token
         },
         params: {
-          id: _this.id,
+          id: id,
+        }
+      });
+    },
+    //购物车页面
+    userShoppingCart(userId){
+      const _this = this
+      this.$router.push({
+        name: 'ShoppingCart',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: userId,
         }
       });
     },
@@ -294,7 +307,21 @@ export default {
     },
     test(text) {
       alert(text)
-    }
+    },
+
+    //跳转至购买页
+    GoodBuy(insId){
+      const _this = this
+      this.$router.push({
+        name: 'GoodBuy',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          insId: insId,
+        }
+      });
+    },
   },
 
   created() {

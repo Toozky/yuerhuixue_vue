@@ -6,7 +6,7 @@ import UserInfo from '../views/UserInfo.vue'
 import UserAdd from '../views/UserAdd.vue'
 import UserModifyPwd from '../views/UserModifyPwd.vue'
 import InsType from '../views/InsType.vue'
-
+import GoodBuy from '../views/GoodBuy.vue'
 
 
 import UserUploadImg from '../views/UserUploadImg.vue'
@@ -49,6 +49,11 @@ const routes = [
         path: '/InsType',
         name: 'InsType',
         component: InsType
+    },
+    {
+        path: '/GoodBuy',
+        name: 'GoodBuy',
+        component: GoodBuy
     },
     {
         path: '/UserUploadImg',
