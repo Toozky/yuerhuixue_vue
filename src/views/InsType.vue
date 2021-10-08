@@ -11,7 +11,7 @@
                  active-text-color="#ffd04b">
           <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
 
-          <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
+          <el-menu-item index="2" @click="insTypePage">乐器心选</el-menu-item>
 
           <el-menu-item index="3">悦耳论坛</el-menu-item>
 
@@ -178,7 +178,7 @@ export default {
       _this.$router.push('/Main')
     },
     //跳转乐器类型页
-    insType() {
+    insTypePage() {
       const _this = this
       _this.$router.go(0)
     },

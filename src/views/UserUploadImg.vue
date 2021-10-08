@@ -1,21 +1,41 @@
 <template>
   <div>
+
+    <Menu :activeIndex2=activeIndex2 @form-change=form></Menu>
+
     <input @change="uploadPhoto($event)" type="file" class="kyc-passin">
     <img style=" height: 200px" :src="formInline.img" alt="">
     <el-button @click="base64ToFile(formInline.img)">下载</el-button>
+
   </div>
 </template>
 <script>
 import {VueCropper} from 'vue-cropper'
+import Menu from '@/components/Menu'
 export default {
   components: {
-    VueCropper
+    VueCropper,
+    Menu,
   },
   data(){
     return{
       formInline:{
         img:''
-      }
+      },
+      activeIndex2: '3',
+      form: {
+        createTime: "",
+        updateTime: "",
+        userAge: "",
+        userEmail: "",
+        userGender: "",
+        userId: "",
+        userImg: "",
+        userName: "",
+        userNickname: "",
+        userPwd: "",
+        userTel: "",
+      },
     }
   },
   methods: {
@@ -52,6 +72,17 @@ export default {
     },
 
 
+  },
+  created() {
+    const bus=this.$bus
+    const _this=this
+    bus.$on('formChange', (form)=>{
+      console.log('++++++')
+      console.log(form)
+      _this.form=form
+      console.log('******')
+      console.log(_this.form)
+    })
   }
 }
 </script>

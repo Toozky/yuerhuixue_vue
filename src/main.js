@@ -20,6 +20,8 @@ Vue.prototype.headImgUrl = Vue.prototype.baseUrl + '/uploadImg/head/'
 Vue.prototype.insImgUrl = Vue.prototype.baseUrl + '/uploadImg/ins/'
 Vue.prototype.insTypeImgUrl = Vue.prototype.baseUrl + '/uploadImg/insType/'
 
+Vue.prototype.$bus = new Vue()
+
 Vue.config.productionTip = false
 
 new Vue({

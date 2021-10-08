@@ -1,60 +1,54 @@
 <template>
   <div>
 
-    <div id="menu">
-      <div id="menuText">
-        <el-menu :default-active="activeIndex2"
-                 class="el-menu-demo"
-                 mode="horizontal"
-                 background-color="#545c64"
-                 text-color="#fff"
-                 active-text-color="#ffd04b">
-
-          <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
-
-          <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
-
-          <el-menu-item index="3">音乐课程</el-menu-item>
-
-          <el-menu-item index="4">悦耳论坛</el-menu-item>
-
-          <el-menu-item index="5">我的订单</el-menu-item>
-
-          <el-submenu index="6" style="float: right">
-            <template slot="title">
-              <span v-if="form.userNickname===''">请登录！　</span>
-              <span v-else>欢迎用户：{{ form.userNickname }}　</span>
-              <el-avatar :size="40" :src="circleUrl"/>
-            </template>
-            <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
-            <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
-            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
-            <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
-            <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </div>
-    </div>
+    <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
     <div id="instrumentInfo">
-      <div id="insImg">
-        <img v-bind:src="insImgUrl+instrument.insImg" alt="">
-      </div>
-      <div id="insInfo">
-        {{ instrument.insName }}
-        {{ instrument.insDesc }}
-        {{instrument.insBrand}}
-        {{instrument.insPrice}}
-        {{instrument.insStock}}
-      </div>
+      <el-card>
+
+        <div id="insImg">
+          <el-card shadow="never">
+            <img v-bind:src="insImgUrl+instrument.insImg" alt="">
+          </el-card>
+        </div>
+
+        <div id="insInfo">
+          <h2>{{ instrument.insName }}</h2>
+          <p style="background-color: #F3F3F3;width: 100%;height:60px;line-height: 60px;margin-top: 0px">{{ instrument.insDesc }}</p><br>
+          <a >价格　</a>
+          <a style="font-size: xx-large;color: red">{{instrument.insPrice}}</a>
+          <a>　元</a>
+          <br>
+          <br>
+          <br>
+          <br>
+          <div>
+            <a style="margin:5px 0;line-height: 30px">类型　{{insType.typeName}}</a><br>
+            <a style="margin:5px 0;line-height: 30px">品牌　{{instrument.insBrand}}</a><br>
+            <a style="margin:5px 0;line-height: 30px">库存　{{instrument.insStock}}　个</a><br>
+          </div>
+        </div>
+
+        <div id="insBuyBtn">
+          <el-button type="danger">　购买　</el-button>
+          <el-button type="success">加入购物车</el-button>
+        </div>
+
+      </el-card>
     </div>
+
+    <div id="footer"></div>
 
   </div>
 </template>
 
 <script>
+import Menu from '@/components/Menu'
 export default {
   name: "GoodBuy",
+  components: {
+    Menu,
+  },
   data() {
     return {
       //菜单活动标签索引
@@ -89,73 +83,17 @@ export default {
         insStock: '',
         typeId: ''
       },
+      insType:{
+        typeId: 1,
+        typeName: '木管乐器',
+        typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
+        typeDesc: '木管乐器',
+        typeLevel: 1
+      }
     }
   },
 
   methods: {
-    //菜单跳转 ↓
-    //跳转至首页
-    Main() {
-      const _this = this
-      _this.$router.push('/Main')
-    },
-    //跳转乐器类型页
-    insType() {
-      const _this = this
-      _this.$router.push('/InsType')
-    },
-    //菜单跳转 ↑
-
-    //菜单用户方法 ↓
-    // 用户登录
-    userLogin() {
-      const _this = this
-      _this.$router.push('/UserLogin')
-    },
-    //用户注销登录
-    userLogout() {
-      const _this = this
-      _this.$message({
-        showClose: true,
-        message: '用户退出登录!',
-      });
-      _this.$clearCookie('token')
-      _this.$clearCookie('userId')
-      _this.$router.push('/Main')
-    },
-    //用户信息修改
-    userInfo() {
-      const _this = this
-      _this.$router.push('/UserInfo')
-    },
-    //用户密码修改
-    userModifyPwd(id) {
-      const _this = this
-      // console.log(_this.id)
-      this.$router.push({
-        name: 'UserModifyPwd',
-        headers: {
-          token: _this.token
-        },
-        params: {
-          id: id,
-        }
-      });
-    },
-    //购物车页面
-    userShoppingCart(userId) {
-      const _this = this
-      this.$router.push({
-        name: 'ShoppingCart',
-        headers: {
-          token: _this.token
-        },
-        params: {
-          id: userId,
-        }
-      });
-    },
-    //菜单用户方法 ↑
 
     //获取乐器信息
     getInsInfo(insId) {
@@ -168,8 +106,10 @@ export default {
         }
       }).then((resp) => {
         // console.log(resp.data.data)
+        // console.log(resp.data.data.insType)
         if (resp.data.code === 10000) {
           _this.instrument = resp.data.data
+          _this.insType=resp.data.data.insType
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -208,14 +148,14 @@ export default {
       _this.insId = this.$route.params.insId
       _this.getInsInfo(_this.insId)
 
-    } else {
+    } /*else {
       this.$router.push('/UserLogin');
       _this.$message({
         showClose: true,
         type: 'info',
         message: '您未登录，请先登录'
       });
-    }
+    }*/
 
   }
 
@@ -239,15 +179,15 @@ export default {
 /*乐器展示div*/
 #instrumentInfo {
   width: 1200px;
-  height: 800px;
+  height: 500px;
   margin: 75px auto;
-  background-color: red;
-  border: 1px black solid;
+  /*background-color: #99a9bf;*/
+  /*border: 1px black solid;*/
 }
 #insImg{
   float: left;
-  width: 400px;
-  height: 450px;
+  width: 33%;
+  height: 490px;
 }
 #insImg img{
   width: 100%;
@@ -255,6 +195,20 @@ export default {
 }
 #insInfo{
   float: left;
-  width: 800px;
+  width: 62%;
+  padding: 0px 0px 20px 40px;
+}
+
+#insBuyBtn{
+  float: none;
+  width: 760px;
+  height: 50px;
+  margin: 410px 0 0 420px;
+}
+
+#footer{
+  width: 1200px;
+  height: 100px;
+  margin: 0 auto;
 }
 </style>

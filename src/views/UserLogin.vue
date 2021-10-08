@@ -9,25 +9,38 @@
         <div style="text-align: center;opacity: 0.75;margin: 20px auto;">
           <a style="font-size: x-large;">登　录</a>
         </div>
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="40px" class="demo-ruleForm">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="60px" class="demo-ruleForm">
           <el-form-item label="账号" prop="text">
             <el-input type="text" v-model="ruleForm.text" autocomplete="off" :value="ruleForm.text"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="pass">
             <el-input type="password" v-model="ruleForm.pass" :value="ruleForm.pass" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-            <el-button type="success" @click="userAdd">注册</el-button>
-          </el-form-item>
+          <div style="width: 100%;height: 40px">
+            <div style="float:left;width: 50%">
+              <el-form-item label="验证码" prop="code">
+                <el-input type="text" v-model="ruleForm.code" :value="ruleForm.pass" autocomplete="off"></el-input>
+              </el-form-item>
+            </div>
+            <div style="width: 45%;float: right">
+              123
+            </div>
+          </div>
+          <div style="float: left;">
+            <el-form-item>
+              <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
+              <el-button @click="resetForm('ruleForm')">重置</el-button>
+              <el-button type="success" @click="userAdd">注册</el-button>
+            </el-form-item>
+          </div>
+
         </el-form>
       </el-card>
     </div>
 
-    <div id="logo">
+<!--    <div id="logo">
       <img :src="logoImg">
-    </div>
+    </div>-->
 
   </div>
 
@@ -178,9 +191,9 @@ export default {
 #userLogin{
   width: 400px;
   height: 600px;
-  top: 300px;
+  top: 260px;
   left: 70%;
-  position: fixed;
+  position: relative;
   z-index: 2;
 }
 

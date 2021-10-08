@@ -7,8 +7,9 @@
 
     <div id="userAdd">
       <el-card shadow="hover">
-        <div style="text-align: center;opacity: 0.75;margin: 10px auto 40px auto;">
-          <a style="font-size: x-large;">注　册</a>
+        <div style="text-align: center;opacity: 0.75;margin: 10px auto 40px auto;height: 40px">
+          <el-button type="text" style="float: left;color: black;margin-right: 20px" @click="userLogin">< 返回登录</el-button>
+          <a style="font-size: x-large;padding-right: 68px">注　册</a>
         </div>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <!--      <el-form-item label="头像">
@@ -230,7 +231,10 @@ export default {
           return false;
         }
       })
-    }
+    },
+    userLogin(){
+      this.$router.push('/UserLogin')
+    },
   }
 
 }
