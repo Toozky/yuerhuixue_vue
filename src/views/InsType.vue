@@ -96,7 +96,6 @@ export default {
   data() {
     return {
       //菜单活动标签索引
-      activeIndex: '2',
       activeIndex2: '2',
       // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",

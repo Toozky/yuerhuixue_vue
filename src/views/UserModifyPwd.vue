@@ -72,8 +72,11 @@ export default {
     return {
       //菜单活动标签索引
       activeIndex2: '6-1',
+      // 菜单头像
+      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       //登录状态 切换菜单用户功能显示
       isLogin: false,
+      token: '',
       //用户信息页背景
       userBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
       //用户信息表
