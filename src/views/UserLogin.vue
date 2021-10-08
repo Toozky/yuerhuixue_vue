@@ -163,6 +163,19 @@ export default {
       const _this = this
       _this.$router.push('/UserAdd')
     },
+    //获取验证码
+    getCode(){
+      axios({
+        method: 'get',
+        url: '/user/createCode',
+        params: {
+          // response: _this.ruleForm.text,
+          d:new Date()
+        }
+      }).then((resp) => {
+        console.log(resp.data)
+      });
+    },
   },
   created() {
     //检测登录状态
@@ -171,6 +184,8 @@ export default {
     if (_this.token !== '') {
       this.$router.push('/Main')
     }
+    console.log('codetest++++++')
+    this.getCode()
   }
 }
 </script>
