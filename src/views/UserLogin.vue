@@ -210,7 +210,6 @@ export default {
     if (_this.token !== '') {
       this.$router.push('/Main')
     }
-    console.log('codetest++++++')
     this.getCode()
   }
 }
