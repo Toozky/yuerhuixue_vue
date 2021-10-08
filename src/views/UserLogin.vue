@@ -23,7 +23,7 @@
               </el-form-item>
             </div>
             <div style="width: 45%;float: right">
-              123
+              <img :src="codeImg"/>
             </div>
           </div>
           <div style="float: left;">
@@ -93,6 +93,8 @@ export default {
       userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
       //logo图
       logoImg:require('@/assets/img/login/logo-words.png'),
+      //验证码
+      codeImg:'',
     };
   },
   methods: {
@@ -165,15 +167,18 @@ export default {
     },
     //获取验证码
     getCode(){
+      const _this=this
       axios({
         method: 'get',
         url: '/user/createCode',
         params: {
           // response: _this.ruleForm.text,
           d:new Date()
-        }
+        },
+        responseType:'blob'
       }).then((resp) => {
-        console.log(resp.data)
+        // console.log(resp.data)
+        _this.codeImg=window.URL.createObjectURL(resp.data)
       });
     },
   },

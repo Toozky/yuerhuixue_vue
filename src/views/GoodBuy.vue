@@ -143,11 +143,6 @@ export default {
 
       //菜单显示头像
       _this.circleUrl = this.headImgUrl + _this.form.userImg
-
-      //获取乐器信息
-      _this.insId = this.$route.params.insId
-      _this.getInsInfo(_this.insId)
-
     } /*else {
       this.$router.push('/UserLogin');
       _this.$message({
@@ -156,6 +151,9 @@ export default {
         message: '您未登录，请先登录'
       });
     }*/
+    //获取乐器信息
+    _this.insId = this.$route.params.insId
+    _this.getInsInfo(_this.insId)
 
   }
 
