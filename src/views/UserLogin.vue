@@ -19,14 +19,15 @@
           <div style="width: 100%;height: 40px">
             <div style="float:left;width: 50%">
               <el-form-item label="验证码" prop="code">
-                <el-input type="text" v-model="ruleForm.code" :value="ruleForm.pass" autocomplete="off"></el-input>
+                <el-input type="text" v-model="ruleForm.code" :value="ruleForm.code" autocomplete="off"></el-input>
               </el-form-item>
             </div>
             <div style="width: 45%;float: right">
-              <img :src="codeImg"/>
+              <img :src="codeImg" @click="getCode"/><br>
+              <a style="font-size: small;opacity: 0.7;cursor:default" @click="getCode">看不清?点击刷新</a>
             </div>
           </div>
-          <div style="float: left;">
+          <div style="float: left;margin-top: 20px">
             <el-form-item>
               <el-button type="primary" @click="userLogin('ruleForm')">登录</el-button>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -73,12 +74,24 @@ export default {
         callback();
       }
     };
+    var validateCode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入验证码'));
+      } else {
+        var verify = '';
+        if (this.ruleForm.code !== verify) {
+          callback(new Error('请输入正确格式的验证码'));
+        }
+        callback();
+      }
+    };
     //录入信息自定义验证规则 ↑
     return {
       // 登录表
       ruleForm: {
         text: '',
-        pass: ''
+        pass: '',
+        code:''
       },
       //验证规则绑定
       rules: {
@@ -87,6 +100,10 @@ export default {
         ],
         pass: [
           {validator: validatePass, trigger: 'blur'}
+        ],
+        code:[
+          // {validator: validateCode, trigger: 'blur'},
+          {min: 4, max: 4, message: '长度4位字符', trigger: 'blur'},
         ]
       },
       //用户登录页背景
@@ -108,12 +125,13 @@ export default {
             url: '/user/login',
             params: {
               name: _this.ruleForm.text,
-              pwd: _this.ruleForm.pass
+              pwd: _this.ruleForm.pass,
+              code:_this.ruleForm.code
             }
           }).then((resp) => {
+            // console.log(resp.data)
             if (resp.data.code === 10000) {
               _this.$setCookie("token", resp.data.msg, 30);
-
               const user = resp.data.data
               setCookie("userId", user.userId, 30)
               setCookie("userName", user.userName, 30)
@@ -139,7 +157,7 @@ export default {
             if (resp.data.code === 10001) {
               _this.$message({
                 showClose: true,
-                message: '账号或密码有误！',
+                message: resp.data.msg,
                 type: 'error'
               });
               setTimeout(() => {
