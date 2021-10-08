@@ -3,8 +3,8 @@
 
     <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
-    <div id="userLoginImg">
-      <img :src="userLoginImg">
+    <div id="userBackgroundImg">
+      <img :src="userBackgroundImg">
     </div>
 
     <div id="userModifyPwd">
@@ -74,8 +74,8 @@ export default {
       activeIndex2: '6-1',
       //登录状态 切换菜单用户功能显示
       isLogin: false,
-      //用户登录页背景
-      userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
+      //用户信息页背景
+      userBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
       //用户信息表
       form: {
         createTime: '',
@@ -221,13 +221,13 @@ export default {
 }
 
 /*背景图片*/
-#userLoginImg{
+#userBackgroundImg{
   width: 100%;
-  margin-top: 150px;
+  margin-top: 100px;
   position: absolute;
   z-index: 1;
 }
-#userLoginImg img{
+#userBackgroundImg img{
   width: 100%;
 }
 
@@ -237,7 +237,7 @@ export default {
   z-index: 2;
   width: 400px;
   margin-top: 250px;
-  margin-right: 150px;
-  float: right;
+  margin-left: 250px;
+  float: left;
 }
 </style>

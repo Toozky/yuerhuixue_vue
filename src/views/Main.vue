@@ -1,57 +1,7 @@
 <template>
   <div>
 
-    <div id="menu">
-      <div id="menuText">
-        <el-menu :default-active="activeIndex2"
-                 class="el-menu-demo"
-                 mode="horizontal"
-                 background-color="#545c64"
-                 text-color="#fff"
-                 active-text-color="#ffd04b">
-          <el-menu-item index="1" @click="Main">商城首页</el-menu-item>
-
-          <!--
-                 &lt;!&ndash;乐器按分类查询分级列表&ndash;&gt;
-                  <el-submenu index="2">
-
-                    <template slot="title">乐器分类</template>
-                    <el-submenu v-for="(insType,index1) in insTypeList"
-                                :index="'2-'+index1">
-                      <template slot="title">
-                        <span @mouseover="getInsList(insType.typeId)">{{ insType.typeName }}</span>
-                      </template>
-                      <el-menu-item v-for="(inst,index2) in insList"
-                                    :index="'2-'+index1+'-'+index2">
-                        {{ inst.insName }}
-                      </el-menu-item>
-                    </el-submenu>
-
-                  </el-submenu>-->
-
-          <el-menu-item index="2" @click="insType">乐器心选</el-menu-item>
-
-          <el-menu-item index="3">音乐课程</el-menu-item>
-
-          <el-menu-item index="4">悦耳论坛</el-menu-item>
-
-          <el-menu-item index="5">我的订单</el-menu-item>
-
-          <el-submenu index="6" style="float: right">
-            <template slot="title">
-              <span v-if="form.userNickname===''">请登录！　</span>
-              <span v-else>欢迎用户：{{ form.userNickname }}　</span>
-              <el-avatar :size="40" :src="circleUrl"/>
-            </template>
-            <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
-            <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
-            <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
-            <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
-            <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </div>
-    </div>
+    <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
     <div id="banner">
       <template>
@@ -81,7 +31,7 @@
             <el-menu-item id="el-menu-item"
                           v-for="item in 8"
                           :key="item+''">
-              <span slot="title">导航{{ item }}</span>
+              <span slot="title">{{ bannerMenu[item-1].name }}</span>
             </el-menu-item>
 
           </el-menu>
@@ -112,7 +62,7 @@
     <div id="insTypeTable">
       <div style="height: 40px;">
         <a style="font-size: x-large;float: left">爆款类型</a>
-        <el-button type="text" style="float: right;color: black;margin-right: 20px" @click="insType">查看更多</el-button>
+        <el-button type="text" style="float: right;color: black;margin-right: 20px" @click="insTypePage">查看更多</el-button>
       </div>
       <div>
         <el-row :gutter="20" style="margin-left: 0">
@@ -138,19 +88,18 @@
 </template>
 
 <script>
+import Menu from '@/components/Menu'
 export default {
   name: "Main",
+  components: {
+    Menu,
+  },
   data() {
     return {
       index: '',
       //菜单活动标签索引
       activeIndex: '1',
       activeIndex2: '1',
-      // 菜单头像
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      //登录状态 切换菜单用户功能显示
-      isLogin: false,
-      token: '',
       //用户信息表
       form: {
         createTime: "",
@@ -171,6 +120,17 @@ export default {
         {bannerUrl: require('@/assets/img/banner/banner1.jpg')},
         {bannerUrl: require('@/assets/img/banner/banner2.jpg')},
         {bannerUrl: require('@/assets/img/banner/banner3.jpg')},],
+      //banner菜单
+      bannerMenu:[
+        {name:'电子键盘'},
+        {name:'管乐器'},
+        {name:'电声乐器'},
+        {name:'打击乐'},
+        {name:'合成器'},
+        {name:'音响 其他配件'},
+        {name:'乐谱专区'},
+        {name:'悦耳课程'},
+      ],
       //5条乐器数组
       insData: [
         {
@@ -228,7 +188,7 @@ export default {
       _this.$router.go(0)
     },
     //跳转乐器类型页
-    insType() {
+    insTypePage() {
       const _this = this
       _this.$router.push('/InsType')
     },

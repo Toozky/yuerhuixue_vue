@@ -14,19 +14,37 @@
 
         <div id="insInfo">
           <h2>{{ instrument.insName }}</h2>
-          <p style="background-color: #F3F3F3;width: 100%;height:60px;line-height: 60px;margin-top: 0px">{{ instrument.insDesc }}</p><br>
-          <a >价格　</a>
-          <a style="font-size: xx-large;color: red">{{instrument.insPrice}}</a>
-          <a>　元</a>
-          <br>
-          <br>
+          <p>描述　{{ instrument.insDesc }}</p><br>
+          <div style="background-color: #F3F3F3;width: 100%;height:80px;line-height: 80px;margin-top: 0px">
+            <a>价格　</a>
+            <a style="font-size: xx-large;color: red">￥{{ instrument.insPrice }}</a>
+            <a>　元</a>
+          </div>
           <br>
           <br>
           <div>
-            <a style="margin:5px 0;line-height: 30px">类型　{{insType.typeName}}</a><br>
-            <a style="margin:5px 0;line-height: 30px">品牌　{{instrument.insBrand}}</a><br>
-            <a style="margin:5px 0;line-height: 30px">库存　{{instrument.insStock}}　个</a><br>
+            <a style="margin:5px 0;line-height: 30px;cursor: pointer" @click="toInsTypePage(insType.typeId)">类型　{{ insType.typeName }}</a><br>
+            <a style="margin:5px 0;line-height: 30px">品牌　{{ instrument.insBrand }}</a><br>
+            <a style="margin:5px 0;line-height: 30px">库存　{{ instrument.insStock }}　个</a><br>
           </div>
+          <div style="margin-top: 20px;float: left" >
+            <el-dropdown>
+  <span class="el-dropdown-link" style="font-size: medium">
+    配送至<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                    v-for="address in userAddr"
+                    :index="address.addrId"
+                    :key="address.addrId"
+                @click.native="ckeckAddr(address.receiverAddr)">
+                  {{ address.receiverAddr }}
+                </el-dropdown-item>
+                <el-dropdown-item>    </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <div style="margin: 20px">　{{receiverAddrChecked}}</div>
         </div>
 
         <div id="insBuyBtn">
@@ -44,6 +62,7 @@
 
 <script>
 import Menu from '@/components/Menu'
+
 export default {
   name: "GoodBuy",
   components: {
@@ -83,13 +102,24 @@ export default {
         insStock: '',
         typeId: ''
       },
-      insType:{
+      insType: {
         typeId: 1,
         typeName: '木管乐器',
         typeImg: 'f4bc5aa9cbf04d3bafbc67763c191b28.jpg',
         typeDesc: '木管乐器',
         typeLevel: 1
-      }
+      },
+      //用户地址表
+      userAddr: [
+        {
+          addrId: '',
+          userId: '',
+          receiverName: '',
+          receiverTel: '',
+          receiverAddr: '',
+        },
+      ],
+      receiverAddrChecked:'',
     }
   },
 
@@ -109,7 +139,7 @@ export default {
         // console.log(resp.data.data.insType)
         if (resp.data.code === 10000) {
           _this.instrument = resp.data.data
-          _this.insType=resp.data.data.insType
+          _this.insType = resp.data.data.insType
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -119,6 +149,23 @@ export default {
           });
         }
       });
+    },
+
+    //选中收货地址
+    ckeckAddr(text){
+      const _this=this
+      _this.receiverAddrChecked=text
+    },
+
+    //根据乐器类型id跳转至乐器类型页
+    toInsTypePage(typeId) {
+      // alert(typeId)
+      this.$router.push({
+        name: 'InsType',
+        params: {
+          typeId: typeId
+        }
+      })
     },
 
   },
@@ -143,6 +190,17 @@ export default {
 
       //菜单显示头像
       _this.circleUrl = this.headImgUrl + _this.form.userImg
+
+      axios({
+        method: 'get',
+        url: '/userAddr/list',
+        params: {
+          userId: _this.form.userId
+        }
+      }).then((resp) => {
+        // console.log(resp.data)
+        _this.userAddr=resp.data.data
+      });
     } /*else {
       this.$router.push('/UserLogin');
       _this.$message({
@@ -182,29 +240,33 @@ export default {
   /*background-color: #99a9bf;*/
   /*border: 1px black solid;*/
 }
-#insImg{
+
+#insImg {
   float: left;
   width: 33%;
   height: 490px;
 }
-#insImg img{
+
+#insImg img {
   width: 100%;
   height: 100%;
 }
-#insInfo{
+
+#insInfo {
+  opacity: 0.7;
   float: left;
   width: 62%;
   padding: 0px 0px 20px 40px;
 }
 
-#insBuyBtn{
+#insBuyBtn {
   float: none;
   width: 760px;
   height: 50px;
   margin: 410px 0 0 420px;
 }
 
-#footer{
+#footer {
   width: 1200px;
   height: 100px;
   margin: 0 auto;

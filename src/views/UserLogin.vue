@@ -77,13 +77,14 @@ export default {
     var validateCode = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入验证码'));
-      } else {
+      } /*else {
         var verify = '';
         if (this.ruleForm.code !== verify) {
           callback(new Error('请输入正确格式的验证码'));
         }
         callback();
-      }
+      }*/
+      callback();
     };
     //录入信息自定义验证规则 ↑
     return {
@@ -102,7 +103,7 @@ export default {
           {validator: validatePass, trigger: 'blur'}
         ],
         code:[
-          // {validator: validateCode, trigger: 'blur'},
+          {validator: validateCode, trigger: 'blur'},
           {min: 4, max: 4, message: '长度4位字符', trigger: 'blur'},
         ]
       },
@@ -161,7 +162,9 @@ export default {
                 type: 'error'
               });
               setTimeout(() => {
-                _this.resetForm('ruleForm')
+                // _this.resetForm('ruleForm')
+                _this.getCode()
+                _this.ruleForm.code=''
               }, 2000)
             }
           });

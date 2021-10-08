@@ -3,8 +3,8 @@
 
     <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
-    <div id="userLoginImg">
-      <img :src="userLoginImg">
+    <div id="userBackgroundImg">
+      <img :src="userBackgroundImg">
     </div>
 
     <div id="userinfo">
@@ -130,8 +130,8 @@ export default {
       token: '',
       //头像回显
       headImg: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      //用户登录页背景
-      userLoginImg:require('@/assets/img/login/userloginimg.jpg'),
+      //用户信息页背景
+      userBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
       //头像是否修改的中间变量
       newImg: '',
       //切换确认上传按钮可用状态
@@ -394,13 +394,13 @@ export default {
 }
 
 /*背景图片*/
-#userLoginImg{
+#userBackgroundImg{
   width: 100%;
-  margin-top: 150px;
+  margin-top: 100px;
   position: absolute;
   z-index: 1;
 }
-#userLoginImg img{
+#userBackgroundImg img{
   width: 100%;
 }
 
@@ -410,7 +410,7 @@ export default {
   z-index: 2;
   width: 400px;
   margin-top: 75px;
-  margin-right: 150px;
-  float: right;
+  margin-left: 250px;
+  float: left;
 }
 </style>
