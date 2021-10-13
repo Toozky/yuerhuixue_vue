@@ -36,6 +36,15 @@
           </div>
 
         </el-form>
+
+        <div style="width: 350px;height: 40px;float: right">
+          <el-button type="text"
+                     style="color: black;opacity: 0.7;width: 350px;"
+                     @click="$router.push('/AdminLogin')">
+            管理员登录
+          </el-button>
+        </div>
+
       </el-card>
     </div>
 

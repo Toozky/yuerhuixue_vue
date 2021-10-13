@@ -44,7 +44,9 @@
         <div style="width: 350px;height: 50px">
           <el-button type="text"
                      style="color: black;opacity: 0.7;float: right"
-                     @click="editInfo">< 取消修改</el-button>
+                     @click="editInfo">
+            < 取消修改
+          </el-button>
         </div>
 
 
@@ -77,7 +79,6 @@
             <el-button type="primary" @click="adminModify('form')">确认修改</el-button>
             <el-button @click="resetForm('form')">重置</el-button>
           </el-form-item>
-
         </el-form>
       </el-card>
 
@@ -142,7 +143,7 @@ export default {
       },
 
       //显示编辑区
-      showEdit:false
+      showEdit: false
 
     }
   },
@@ -210,8 +211,8 @@ export default {
                 _this.editInfo()
 
                 //将昵称发送至菜单组件
-                const bus=this.$bus
-                bus.$emit('adminNicknameChange',_this.form.adminNickname)
+                const bus = this.$bus
+                bus.$emit('adminNicknameChange', _this.form.adminNickname)
 
                 _this.$message({
                   showClose: true,
@@ -310,8 +311,8 @@ export default {
           setCookie("adminUpdateTime", admin.adminUpdateTime, 30)
 
           //将头像链接发送至菜单组件
-          const bus=this.$bus
-          bus.$emit('circleUrlChange',_this.circleUrl)
+          const bus = this.$bus
+          bus.$emit('circleUrlChange', _this.circleUrl)
 
           _this.$message({
             showClose: true,
@@ -331,22 +332,22 @@ export default {
     },
 
     //显示编辑区
-    editInfo(){
-      this.showEdit=!this.showEdit
+    editInfo() {
+      this.showEdit = !this.showEdit
     }
   },
 
   created() {
     //将活动菜单索引发送至菜单组件
-    const bus=this.$bus
-    bus.$emit('activeIndex2Change','1')
+    const bus = this.$bus
+    bus.$emit('activeIndex2Change', '1')
     //检测登录状态
     const _this = this
     _this.token = _this.$getCookie('AdminToken')
     _this.form.adminCreateTime = _this.$getCookie('createTime')
 
     //默认关闭编辑区
-    _this.showEdit=false
+    _this.showEdit = false
     if (_this.token !== '') {
       _this.isLogin = true
       _this.form.adminId = _this.$getCookie('adminId')
