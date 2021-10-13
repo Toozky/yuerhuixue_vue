@@ -1,7 +1,8 @@
 <template>
   <div>
 
-    <Menu :activeIndex2=activeIndex2 :form=form></Menu>
+    <Menu :activeIndex2=activeIndex2
+          @form-chage=form></Menu>
 
     <div id="userBackgroundImg">
       <img :src="userBackgroundImg">
@@ -233,6 +234,11 @@ export default {
                 setCookie("userEmail", user.userEmail, 30)
                 setCookie("userGender", user.userGender, 30)
                 setCookie("userImg", user.userImg, 30)
+
+                //将用户信息发送至菜单组件
+                const bus=this.$bus
+                bus.$emit('formChange',_this.form)
+
                 _this.$message({
                   showClose: true,
                   type: 'success',
@@ -268,6 +274,7 @@ export default {
 
     //头像上传错误捕获
     handleAvatarError(err, file, fileList){
+      const _this=this
       console.log(err.status)
       if (err.status===500){
         this.$message.error('上传头像图片只能是 JPG或PNG 格式!');

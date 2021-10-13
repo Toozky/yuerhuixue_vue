@@ -1,13 +1,6 @@
 <template>
   <div>
-
-    <Menu :activeIndex2=activeIndex2 :form=form></Menu>
-
-    <div id="userBackgroundImg">
-      <img :src="userBackgroundImg">
-    </div>
-
-    <div id="userModifyPwd">
+    <div id="adminModifyPwd">
       <el-card shadow="hover">
         <div style="text-align: center;opacity: 0.75;margin: 10px auto 40px auto;">
           <a style="font-size: x-large;">修改密码</a>
@@ -26,23 +19,19 @@
             <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="userModifyPwd('ruleForm')">确认修改</el-button>
+            <el-button type="primary" @click="adminModifyPwd('ruleForm')">确认修改</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           </el-form-item>
         </el-form>
       </el-card>
     </div>
-
   </div>
 </template>
 
 <script>
-import Menu from '@/components/Menu'
 export default {
-  name: "UserModifyPwd",
-  components: {
-    Menu,
-  },
+  name: "AdminModifyPwd",
+
   data() {
     //录入信息自定义验证规则 ↓
     var validatePass = (rule, value, callback) => {
@@ -78,20 +67,16 @@ export default {
       isLogin: false,
       token: '',
       //用户信息页背景
-      userBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
+      adminBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
       //用户信息表
       form: {
         createTime: '',
         updateTime: '',
-        userAge: '',
-        userEmail: '',
-        userGender: '',
-        userId: '',
-        userImg: '',
-        userName: '',
-        userNickname: '',
-        userPwd: '',
-        userTel: '',
+        adminId: '',
+        adminImg: '',
+        adminName: '',
+        adminNickname: '',
+        adminPwd: '',
       },
       // 修改密码表
       ruleForm: {
@@ -116,7 +101,7 @@ export default {
 
   methods: {
     //用户修改密码
-    userModifyPwd(formName) {
+    adminModifyPwd(formName) {
       const _this = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -128,7 +113,7 @@ export default {
           }).then(() => {
             axios({
               method: 'put',
-              url: '/user/modifyPwd',
+              url: '/admin/modifyPwd',
               headers: {
                 token: _this.token
               },
@@ -145,9 +130,9 @@ export default {
                   type: 'success',
                   message: '修改成功!',
                 });
-                _this.$clearCookie('token')
-                _this.$clearCookie('userId')
-                _this.$router.push('/UserLogin')
+                _this.$clearCookie('AdminToken')
+                _this.$clearCookie('adminId')
+                _this.$router.push('/AdminLogin')
               }
               if (resp.data.code === 10001) {
                 _this.$message({
@@ -175,61 +160,65 @@ export default {
   },
 
   created() {
+    //将活动菜单索引发送至菜单组件
+    const bus = this.$bus
+    bus.$emit('activeIndex2Change', '1')
+
     //检测登录状态
     const _this = this
-    _this.token = _this.$getCookie('token')
+    _this.token = _this.$getCookie('AdminToken')
     if (_this.token !== '') {
       _this.isLogin = true
-      _this.form.createTime = _this.$getCookie('createTime')
-      _this.form.updateTime = _this.$getCookie('updateTime')
-      _this.form.userAge = _this.$getCookie('userAge')
-      _this.form.userEmail = _this.$getCookie('userEmail')
-      _this.form.userGender = _this.$getCookie('userGender')
-      _this.form.userId = _this.$getCookie('userId')
-      _this.form.userImg = _this.$getCookie('userImg')
-      _this.form.userName = _this.$getCookie('userName')
-      _this.form.userNickname = _this.$getCookie('userNickname')
-      _this.form.userPwd = _this.$getCookie('userPwd')
-      _this.form.userTel = _this.$getCookie('userTel')
+      _this.form.createTime = _this.$getCookie('adminCreateTime')
+      _this.form.updateTime = _this.$getCookie('adminUpdateTime')
+      _this.form.adminId = _this.$getCookie('adminId')
+      _this.form.adminImg = _this.$getCookie('adminImg')
+      _this.form.adminName = _this.$getCookie('adminName')
+      _this.form.adminNickname = _this.$getCookie('adminNickname')
+      _this.form.adminPwd = _this.$getCookie('adminPwd')
+
 
       //菜单显示头像
-      _this.circleUrl = this.headImgUrl + _this.form.userImg
+      _this.circleUrl = this.headImgUrl + _this.form.adminImg
 
       //获取用户id
-      _this.ruleForm.id = this.$route.params.id
-    }else {
-      this.$router.push('/UserLogin');
+
+        _this.ruleForm.id=_this.form.adminId
+        console.log(_this.ruleForm.id)
+
+
+    } else {
+      this.$router.push('/AdminLogin');
       _this.$message({
         showClose: true,
         type: 'info',
         message: '您未登录，请先登录'
       });
+
     }
   }
-
 }
 </script>
 
 <style scoped>
-
 /*背景图片*/
-#userBackgroundImg{
+#adminBackgroundImg{
   width: 100%;
   margin-top: 100px;
   position: absolute;
   z-index: 1;
 }
-#userBackgroundImg img{
+#adminBackgroundImg img{
   width: 100%;
 }
 
 /*修改密码*/
-#userModifyPwd{
+#adminModifyPwd{
   position: relative;
   z-index: 2;
   width: 400px;
-  margin-top: 250px;
-  margin-left: 250px;
+  margin-top: 50px;
+  margin-left: 50px;
   float: left;
 }
 </style>

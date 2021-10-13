@@ -12,6 +12,11 @@ import GoodBuy from '../views/GoodBuy.vue'
 import UserUploadImg from '../views/UserUploadImg.vue'
 import ShoppingCart from '../views/ShoppingCart.vue'
 
+import AdminLogin from '../views/AdminLogin.vue'
+
+import adminindex from "@/router/adminindex";
+
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -64,13 +69,19 @@ const routes = [
         path: '/ShoppingCart',
         name: 'ShoppingCart',
         component: ShoppingCart
-    }
+    },
+    {
+        path: '/AdminLogin',
+        name: 'AdminLogin',
+        component: AdminLogin
+    },
+    ...adminindex
 ]
 
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes
+    routes,
 })
 
 export default router

@@ -177,8 +177,11 @@ export default {
       _this.id = _this.form.userId
 
       const bus=this.$bus
-      bus.$emit('userId',_this.id)
-      bus.$emit('formChange',_this.form)
+      bus.$on('formChange',(form)=>{
+        _this.form=form
+      })
+
+      bus.$emit('idChange',_this.id)
     }
 
   }

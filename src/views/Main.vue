@@ -370,7 +370,7 @@ export default {
   margin-top: 75px;
   margin-bottom: 50px;
   position: absolute;
-  left: 17.5%;
+  left: 18.5%;
   z-index: 1;
 }
 
@@ -393,7 +393,7 @@ export default {
   width: 480px;
   margin-top: 75px;
   opacity: 0.8;
-  left: 17.5%;
+  left: 18.5%;
   position: relative;
   z-index: 2;
 }

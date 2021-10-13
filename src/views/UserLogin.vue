@@ -132,8 +132,8 @@ export default {
           }).then((resp) => {
             // console.log(resp.data)
             if (resp.data.code === 10000) {
-              _this.$setCookie("token", resp.data.msg, 30);
-              const user = resp.data.data
+              _this.$setCookie("token", resp.data.data.token, 30);
+              const user = resp.data.data.user
               setCookie("userId", user.userId, 30)
               setCookie("userName", user.userName, 30)
               setCookie("userNickname", user.userNickname, 30)
