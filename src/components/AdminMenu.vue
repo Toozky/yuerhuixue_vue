@@ -40,7 +40,7 @@ export default {
       index: '',
       // //菜单活动标签索引
       // activeIndex: '1',
-      // activeIndex2: '1',
+      activeIndex2: '1',
       // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       //登录状态 切换菜单用户功能显示
@@ -93,6 +93,7 @@ export default {
     adminInfo() {
       const _this = this
       _this.$router.push('/AdminIndex/AdminInfo')
+
     },
     //用户密码修改
     adminModifyPwdPage(id) {
@@ -100,12 +101,12 @@ export default {
       console.log(id)
       this.$router.push({
         path: '/AdminIndex/AdminModifyPwd',
+        query: {
+          adminID: id,
+        },
         headers: {
           token: _this.token
         },
-        params: {
-          adminID: id,
-        }
       });
     },
     
@@ -133,19 +134,21 @@ export default {
       _this.id = _this.form.adminId
 
       const bus=this.$bus
-      bus.$emit('adminIdChange',_this.form.adminId)
+
 
       bus.$on('activeIndex2Change', (activeIndex2)=>{
-        this.activeIndex2=activeIndex2
+        _this.activeIndex2=activeIndex2
       })
 
       bus.$on('circleUrlChange', (circleUrl)=>{
-        this.circleUrl=circleUrl
+        _this.circleUrl=circleUrl
       })
 
       bus.$on('adminNicknameChange', (adminNickname)=>{
         _this.form.adminNickname=adminNickname
       })
+
+      bus.$emit('adminIdChange',_this.form.adminId)
     }
 
   }

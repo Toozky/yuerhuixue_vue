@@ -183,8 +183,9 @@ export default {
 
       //获取用户id
 
-        _this.ruleForm.id=_this.form.adminId
-        console.log(_this.ruleForm.id)
+        _this.ruleForm.id=_this.$route.query.adminID
+        // console.log(_this.ruleForm.id)
+      // console.log(_this.$route.query.adminID)
 
 
     } else {

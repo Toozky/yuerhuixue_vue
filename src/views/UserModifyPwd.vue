@@ -175,6 +175,10 @@ export default {
   },
 
   created() {
+    //将活动菜单索引发送至菜单组件
+    const bus = this.$bus
+    bus.$emit('activeIndex2Change', '1')
+
     //检测登录状态
     const _this = this
     _this.token = _this.$getCookie('token')
@@ -197,6 +201,7 @@ export default {
 
       //获取用户id
       _this.ruleForm.id = this.$route.params.id
+      console.log(this.$route.params.id)
     }else {
       this.$router.push('/UserLogin');
       _this.$message({

@@ -98,7 +98,7 @@ export default {
       formInline: {
         img: ''
       },
-      activeIndex2: '1',
+      activeIndex2: '',
       form: {
         adminId: '',
         adminImg: '',
