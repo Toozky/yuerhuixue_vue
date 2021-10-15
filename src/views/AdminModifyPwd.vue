@@ -60,14 +60,14 @@ export default {
     //录入信息自定义验证规则 ↑
     return {
       //菜单活动标签索引
-      activeIndex2: '6-1',
+      activeIndex2: '1',
       // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       //登录状态 切换菜单用户功能显示
       isLogin: false,
       token: '',
       //用户信息页背景
-      adminBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
+      adminBackgroundImg: require('@/assets/img/user/userbackground.jpg'),
       //用户信息表
       form: {
         createTime: '',
@@ -160,9 +160,9 @@ export default {
   },
 
   created() {
-    //将活动菜单索引发送至菜单组件
-    const bus = this.$bus
-    bus.$emit('activeIndex2Change', '1')
+    // //将菜单索引发送至发送至AdminIndex
+    // const bus = this.$bus
+    // bus.$emit('activeIndex2Change', _this.activeIndex2)
 
     //检测登录状态
     const _this = this
@@ -183,8 +183,8 @@ export default {
 
       //获取用户id
 
-        _this.ruleForm.id=_this.$route.query.adminID
-        // console.log(_this.ruleForm.id)
+      _this.ruleForm.id = _this.$route.query.adminID
+      // console.log(_this.ruleForm.id)
       // console.log(_this.$route.query.adminID)
 
 
@@ -203,18 +203,19 @@ export default {
 
 <style scoped>
 /*背景图片*/
-#adminBackgroundImg{
+#adminBackgroundImg {
   width: 100%;
   margin-top: 100px;
   position: absolute;
   z-index: 1;
 }
-#adminBackgroundImg img{
+
+#adminBackgroundImg img {
   width: 100%;
 }
 
 /*修改密码*/
-#adminModifyPwd{
+#adminModifyPwd {
   position: relative;
   z-index: 2;
   width: 400px;

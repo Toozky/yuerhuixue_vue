@@ -35,12 +35,15 @@
 <script>
 export default {
   name: "AdminMenu",
+  props: {
+    'activeIndex2':String,
+  },
   data() {
     return {
       index: '',
       // //菜单活动标签索引
       // activeIndex: '1',
-      activeIndex2: '1',
+      // activeIndex2: '1',
       // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       //登录状态 切换菜单用户功能显示
@@ -135,11 +138,6 @@ export default {
 
       const bus=this.$bus
 
-
-      bus.$on('activeIndex2Change', (activeIndex2)=>{
-        _this.activeIndex2=activeIndex2
-      })
-
       bus.$on('circleUrlChange', (circleUrl)=>{
         _this.circleUrl=circleUrl
       })
@@ -166,6 +164,9 @@ export default {
   width: auto;
   height: auto;
   margin: 0px auto;
+}
+.el-menu{
+  border: 0;
 }
 /*菜单选中背景*/
 .el-menu-item.is-active {

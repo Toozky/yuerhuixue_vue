@@ -338,9 +338,10 @@ export default {
   },
 
   created() {
-    //将活动菜单索引发送至菜单组件
-    const bus = this.$bus
-    bus.$emit('activeIndex2Change', '1')
+    // //将活动菜单索引发送至菜单组件
+    // const bus = this.$bus
+    // bus.$emit('activeIndex2Change', '1')
+
     //检测登录状态
     const _this = this
     _this.token = _this.$getCookie('AdminToken')
