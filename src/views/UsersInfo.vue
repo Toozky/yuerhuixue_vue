@@ -36,6 +36,9 @@
             prop="userPwd"
             label="用户密码"
             width="100">
+          <template>
+            <span>******</span>
+          </template>
         </el-table-column>
 
         <el-table-column
@@ -48,6 +51,11 @@
             prop="userGender"
             label="用户性别"
             width="80">
+          <template width="90" slot-scope="scope">
+            <span v-show="scope.row.userGender==='male'">男</span>
+            <span v-show="scope.row.userGender==='female'">女</span>
+            <span v-show="scope.row.userGender===''">保密</span>
+          </template>
         </el-table-column>
 
         <el-table-column
@@ -77,9 +85,9 @@
             label="操作"
             width="200">
           <template slot-scope="scope">
-            <el-button @click="editUser(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="editUser(scope.row)" type="primary" icon="el-icon-edit" circle></el-button>
 
-            <el-button @click="deleteUser(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="deleteUser(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
 
           </template>
         </el-table-column>
@@ -98,7 +106,7 @@
     <div>
       <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
 
-        <el-form label-width="80px" :model="user">
+        <el-form label-width="80px">
           <el-form-item label="头像">
             <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
             <el-upload
@@ -106,10 +114,9 @@
                 :action="this.baseUrl+'/user/uploadimg'"
                 :show-file-list="false"
                 :before-upload="beforeAvatarUpload"
-                :on-error="handleAvatarError"
                 :on-success="handleAvatarSuccess">
               <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-              <el-button type="success" :disabled="imgOK" @click="submitHead(user)">确认上传</el-button>
+              <el-button type="success" :disabled="imgNotOK" @click="submitHead(user)">确认上传</el-button>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -118,14 +125,14 @@
           <el-form-item label="用户ID" disabled prop="userId">
             <el-input v-model="user.userId" disabled></el-input>
           </el-form-item>
-          <el-form-item label="用户密码" disabled prop="userPwd">
-            <el-input v-model="user.userPwd" disabled></el-input>
-          </el-form-item>
           <el-form-item label="创建时间" disabled prop="updateTime">
             <el-input v-model="user.updateTime" disabled></el-input>
           </el-form-item>
           <el-form-item label="更新时间" disabled prop="updateTime">
             <el-input v-model="user.updateTime" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户密码" disabled prop="userPwd">
+            <el-input v-model="user.userPwd"></el-input>
           </el-form-item>
           <el-form-item label="用户名" prop="userName">
             <el-input v-model="user.userName" placeholder="请输入员工姓名"></el-input>
@@ -152,7 +159,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="userModify(user)">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -217,11 +224,13 @@ export default {
       },
 
       //切换确认上传按钮可用状态
-      imgOK: true,
-      //头像是否修改的中间变量
-      newImg: '',
+      imgNotOK: true,
 
-      headImg:'',
+      //
+      nowImg: '',
+      //头像是否修改的中间变量
+
+      headImg: '',
 
     }
   },
@@ -257,7 +266,7 @@ export default {
         if (resp.data.code === 10000) {
           _this.usersData = resp.data.data.list
           _this.total = resp.data.data.total
-          console.log(resp.data.data.list)
+          // console.log(resp.data.data.list)
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -271,9 +280,10 @@ export default {
 
     editUser(user) {
       const _this = this
-      this.dialogFormVisible = true
-      this.user = user
-      _this.headImg = this.headImgUrl + user.userImg
+      _this.dialogFormVisible = true
+      _this.user = user
+      _this.user.userPwd='******'
+      _this.headImg = this.headImgUrl + _this.user.userImg
     },
 
     deleteUser(row) {
@@ -282,38 +292,27 @@ export default {
 
     //头像上传检查
     beforeAvatarUpload(file) {
-      const isJPG = file.type === ('image/jpeg' || 'image/jpg' || 'image/png');
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
 
     //头像上传回显
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
       const _this = this
-      _this.imgOK = !_this.imgOK
-      _this.headImg = this.headImgUrl + res.data
-      _this.newImg = res.data
+      if (res.code === 10000) {
+        _this.imgNotOK = false
+        _this.headImg = this.headImgUrl + res.data
+        _this.newImg = res.data
+      }
+      if (res.code === 10001) {
+        this.$message.error(res.msg);
+      }
     },
 
-    //头像上传错误捕获
-    handleAvatarError(err, file, fileList) {
-      const _this = this
-      if (err.status === 500) {
-        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
-        _this.imgOK = !_this.imgOK
-      }
-      if (err.status === 404) {
-        this.$message.error('上传头像失败!');
-        _this.imgOK = !_this.imgOK
-      }
-    },
 
     //确认修改头像
     submitHead(user) {
@@ -329,22 +328,20 @@ export default {
           token: _this.token
         },
         data: {
-          /*userId: user.userId,
+          userId: user.userId,
           userImg: user.userImg,
           userAge: user.userAge,
           userEmail: user.userEmail,
           userGender: user.userGender,
           userName: user.userName,
           userNickname: user.userNickname,
-          userTel: user.userTel,
-          createTime:user.createTime,
-          updateTime:user.updateTime,*/
-          user:user
+          userTel: user.userTel
 
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
           _this.getUserList(_this.currentPage, _this.pageSize)
+
           _this.$message({
             showClose: true,
             type: 'success',
@@ -362,10 +359,66 @@ export default {
 
 
     },
+
+    //用户信息修改
+    userModify(user) {
+      const _this = this
+
+      if (true) {
+        _this.$confirm('您确定要修改为当前信息吗？', '提示', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确定',
+          type: 'warning'
+        }).then(() => {
+          axios({
+            method: 'put',
+            url: '/user/modify',
+            headers: {
+              token: _this.token
+            },
+            data: {
+              userId: user.userId,
+              userAge: user.userAge,
+              userEmail: user.userEmail,
+              userGender: user.userGender,
+              userImg: user.userImg,
+              userName: user.userName,
+              userNickname: user.userNickname,
+              userTel: user.userTel
+            }
+          }).then((resp) => {
+            if (resp.data.code === 10000) {
+
+              _this.$message({
+                showClose: true,
+                type: 'success',
+                message: '修改成功!'
+              })
+              setTimeout(() => {
+                _this.getUserList(_this.pageNum, _this.pageSize)
+                _this.dialogFormVisible = false
+              }, 1500);
+            }
+            if (resp.data.code === 10001) {
+              _this.$message({
+                showClose: true,
+                type: 'error',
+                message: '修改失败!'
+              })
+            }
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      }
+    },
   },
   created() {
     this.getUserList(this.pageNum, this.pageSize)
-    this.token=this.getCookie('AdminToken')
+    this.token = this.$getCookie('AdminToken')
 
   }
 

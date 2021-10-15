@@ -20,10 +20,9 @@
                 :action="this.baseUrl+'/user/uploadimg'"
                 :show-file-list="false"
                 :before-upload="beforeAvatarUpload"
-                :on-error="handleAvatarError"
                 :on-success="handleAvatarSuccess">
               <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-              <el-button type="success" :disabled="imgOK" @click="submitHead">确认上传</el-button>
+              <el-button type="success" :disabled="imgNotOK" @click="submitHead">确认上传</el-button>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -139,7 +138,7 @@ export default {
       //头像是否修改的中间变量
       newImg: '',
       //切换确认上传按钮可用状态
-      imgOK: false,
+      imgNotOK: true,
       //用户信息表
       form: {
         createTime: '',
@@ -272,38 +271,26 @@ export default {
 
     },
 
-    //头像上传错误捕获
-    handleAvatarError(err, file, fileList){
-      const _this=this
-      console.log(err.status)
-      if (err.status===500){
-        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
-        _this.imgOK=!_this.imgOK
-      }
-      if (err.status===404){
-        this.$message.error('上传头像失败!');
-        _this.imgOK=!_this.imgOK
-      }
-    },
     //头像上传回显
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
       const _this = this
-      _this.imgOK=!_this.imgOK
-      _this.headImg = this.headImgUrl + res.data
-      _this.newImg = res.data
+      if (res.code===10000){
+        _this.imgNotOK=false
+        _this.headImg = this.headImgUrl + res.data
+        _this.newImg = res.data
+      }
+      if (res.code===10001){
+        this.$message.error(res.msg);
+      }
     },
     //头像上传检查
     beforeAvatarUpload(file) {
-      const isJPG = file.type === ('image/jpeg' || 'image/jpg' || 'image/png');
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
     //确认修改头像
     submitHead() {
@@ -376,7 +363,6 @@ export default {
 
       //上传回显头像
       _this.headImg = this.headImgUrl + _this.form.userImg
-      _this.imgOK=!_this.imgOK
     }else {
       this.$router.push('/UserLogin');
       _this.$message({

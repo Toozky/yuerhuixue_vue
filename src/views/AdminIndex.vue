@@ -143,6 +143,9 @@ export default {
   position: absolute;
   z-index: 2;
 }
+#admin-menu >>> .el-menu{
+  border-bottom:0px ;
+}
 
 #admin-aside{
 
