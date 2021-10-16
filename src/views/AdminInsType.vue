@@ -7,13 +7,13 @@
         <el-table-column
             fixed
             prop="userId"
-            label="用户ID"
-            width="70">
+            label="类型ID"
+            width="100">
         </el-table-column>
 
         <el-table-column
             prop="userImg"
-            label="用户头像"
+            label="类型图片"
             width="120">
           <template width="90" slot-scope="scope">
             <img style="width:90px;height: 90px" :src="headImgUrl+scope.row.userImg">
@@ -22,52 +22,20 @@
 
         <el-table-column
             prop="userName"
-            label="用户名"
+            label="类型名"
             width="150">
         </el-table-column>
 
         <el-table-column
             prop="userNickname"
-            label="用户昵称"
+            label="描述"
             width="150">
         </el-table-column>
 
         <el-table-column
             prop="userPwd"
-            label="用户密码"
+            label="等级"
             width="100">
-          <template>
-            <span>******</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-            prop="userAge"
-            label="用户年龄"
-            width="80">
-        </el-table-column>
-
-        <el-table-column
-            prop="userGender"
-            label="用户性别"
-            width="80">
-          <template width="90" slot-scope="scope">
-            <span v-show="scope.row.userGender==='male'">男</span>
-            <span v-show="scope.row.userGender==='female'">女</span>
-            <span v-show="scope.row.userGender===''">保密</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-            prop="userTel"
-            label="用户电话"
-            width="150">
-        </el-table-column>
-
-        <el-table-column
-            prop="userEmail"
-            label="用户邮箱"
-            width="200">
         </el-table-column>
 
         <el-table-column
@@ -169,10 +137,8 @@
 </template>
 
 <script>
-import {setCookie} from "@/utils/cookie";
-
 export default {
-  name: "UsersInfo",
+  name: "AdminInsType",
   data() {
     return {
       //菜单活动标签索引
@@ -486,4 +452,10 @@ export default {
 #userList {
   width: 1680px;
 }
+</style>
+}
+</script>
+
+<style scoped>
+
 </style>

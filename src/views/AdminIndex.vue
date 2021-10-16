@@ -21,7 +21,7 @@
                 background-color="#222222"
                 text-color="#fff"
                 active-text-color="#fff"
-                :default-openeds="['管理员管理']"
+                :default-openeds="'管理员管理'"
                 :default-active="$route.path">
               <el-menu-item
                   style="margin-top:60px;"
@@ -31,10 +31,10 @@
                 <span slot="title">首页</span>
               </el-menu-item>
               <el-submenu
-                  v-for="(adminroute,index1) in $router.options.routes"
+                  v-for="(adminroute,index1) in adminRouterList"
                   :index="adminroute.name+''"
                   :key="index1"
-                  v-show="adminroute.children">
+                  >
                 <template slot="title">
                   <i :class="adminroute.icon"></i>
                   <span>{{ adminroute.name }}</span>
@@ -100,11 +100,12 @@ export default {
   },
   data() {
     return {
+
       circleUrl:'',
       formInline: {
         img: ''
       },
-      activeIndex2: '',
+      activeIndex2: '1',
       form: {
         adminId: '',
         adminImg: '',
@@ -114,6 +115,7 @@ export default {
         adminCreateTime: '',
         adminUpdateTime: ''
       },
+      adminRouterList:[],
     }
   },
   methods: {
@@ -125,6 +127,17 @@ export default {
     }
   },
   created() {
+    //获取AdminIndex的子路由列表
+    let adminIndex = this.$router.options.routes.filter(result => {
+      if(result.path ==="/AdminIndex"){
+        return result;
+      }
+    })
+    this.adminRouterList=adminIndex;
+    console.log(this.adminRouterList)
+    console.log(this.adminRouterList[0].name)
+
+    // this.test()
     // const bus = this.$bus
     // bus.$on('activeIndex2Change', (activeIndex2)=>{
     //   this.activeIndex2=activeIndex2

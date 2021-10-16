@@ -5,7 +5,7 @@ import UsersInfo from "@/views/UsersInfo";
 import AdminModifyPwd from '@/views/AdminModifyPwd';
 import AdminAdd from '@/views/AdminAdd'
 
-
+//管理员相关页面
 const adminroutes=[
     {
         path:'/AdminAdd',
@@ -46,10 +46,9 @@ const adminroutes=[
                 component:AdminMain
             },
 
+        ],
+    },
 
-
-        ]
-    }
 ]
 
 export default adminroutes

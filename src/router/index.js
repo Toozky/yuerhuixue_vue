@@ -15,6 +15,7 @@ import ShoppingCart from '../views/ShoppingCart.vue'
 import AdminLogin from '../views/AdminLogin.vue'
 
 import adminindex from "@/router/adminindex";
+import shopindex from "@/router/shopindex";
 
 
 Vue.use(VueRouter)
@@ -75,7 +76,8 @@ const routes = [
         name: 'AdminLogin',
         component: AdminLogin
     },
-    ...adminindex
+    ...adminindex,
+    ...shopindex
 ]
 
 const router = new VueRouter({

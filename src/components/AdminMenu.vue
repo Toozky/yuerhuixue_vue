@@ -12,7 +12,7 @@
 
         <el-menu-item index="1" @click="AdminIndexPage">系统设置</el-menu-item>
 
-        <el-menu-item index="2" @click="">商城设置</el-menu-item>
+        <el-menu-item index="2" @click="AdminShopIndexPage">商城设置</el-menu-item>
 
 
         <el-submenu index="6" style="float: right">
@@ -68,10 +68,9 @@ export default {
       const _this = this
       _this.$router.push('/AdminIndex/AdminMainPage')
     },
-    //跳转乐器类型页
-    insTypePage() {
+    AdminShopIndexPage(){
       const _this = this
-      _this.$router.push('/InsType')
+      _this.$router.push('/AdminShopIndex/AdminShopMain')
     },
     //菜单跳转 ↑
 
