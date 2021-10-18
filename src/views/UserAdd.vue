@@ -206,7 +206,7 @@ export default {
               pwd:_this.form.userPwd
             }
           }).then((resp)=>{
-            console.log(resp.data.code)
+            // console.log(resp.data.code)
             if (resp.data.code === 10000) {
               _this.$message({
                 type: 'success',
@@ -219,7 +219,7 @@ export default {
             if (resp.data.code === 10001) {
               _this.$message({
                 type: 'error',
-                message: '用户名：　'+_this.form.userName + '　已存在!'
+                message: resp.data.msg
               })
             }
           });

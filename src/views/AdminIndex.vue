@@ -10,18 +10,19 @@
 
 
       <div id="admin-aside">
-        <el-aside width="201px" style="float: left">
-          <div style="width: 200px;background-color: #222222">
+        <el-aside style="height: auto;width: auto">
+          <div>
             <el-menu
+                :collapse="verticalMenu"
+                class="el-menu-vertical-demo"
                 router
-                style="width: 200px;"
                 default-active="2"
                 @open="handleOpen"
                 @close="handleClose"
                 background-color="#222222"
                 text-color="#fff"
                 active-text-color="#fff"
-                :default-openeds="'管理员管理'"
+                default-openeds="管理员管理"
                 :default-active="$route.path">
               <el-menu-item
                   style="margin-top:60px;"
@@ -80,7 +81,7 @@
           </div>
         </el-aside>
 
-        <el-main style="height: 850px;margin-top:60px;">
+        <el-main style="height: auto;width:auto;padding-top:60px;">
           <router-view></router-view>
         </el-main>
       </div>
@@ -100,6 +101,7 @@ export default {
   },
   data() {
     return {
+      verticalMenu: false,
 
       circleUrl:'',
       formInline: {
@@ -134,40 +136,57 @@ export default {
       }
     })
     this.adminRouterList=adminIndex;
-    console.log(this.adminRouterList)
-    console.log(this.adminRouterList[0].name)
+    // console.log(this.adminRouterList)
+    // console.log(this.adminRouterList[0].name)
 
     // this.test()
-    // const bus = this.$bus
-    // bus.$on('activeIndex2Change', (activeIndex2)=>{
-    //   this.activeIndex2=activeIndex2
-    // })
+    const bus = this.$bus
+    const _this = this
+    bus.$on('verticalMenuChange', (verticalMenu) => {
+      _this.verticalMenu = verticalMenu
+    })
   }
 }
 </script>
 
 <style scoped>
-/*菜单选中背景*/
-.el-menu-item.is-active {
-  background-color: #09B4C5 !important;
-}
-#admin-menu{
+/*横向菜单*/
+#admin-menu {
   width: 100%;
   position: absolute;
   z-index: 2;
 }
-#admin-menu >>> .el-menu{
-  border-bottom:0px ;
-}
 
-#admin-aside{
-
+#admin-menu >>> .el-menu {
+  border-bottom: 0px;
 }
 
 /*菜单高100%*/
 .el-menu {
   height: 100vh;
+}
+
+/*菜单选中背景*/
+.el-menu-item.is-active {
+  background-color: #09B4C5 !important;
+}
+
+.el-container{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+.el-aside {
+  float: left;
+  background-color: #222222;
   position: relative;
   z-index: 1;
 }
+.el-main {
+  width: max-content;
+  position: relative;
+  z-index: 1;
+}
+
 </style>

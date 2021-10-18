@@ -3,7 +3,8 @@
     <div id="userList">
       <el-table
           :data="usersData"
-          border>
+          border
+          height="671px">
         <el-table-column
             fixed
             prop="userId"
@@ -22,14 +23,12 @@
 
         <el-table-column
             prop="userName"
-            label="用户名"
-            width="150">
+            label="用户名">
         </el-table-column>
 
         <el-table-column
             prop="userNickname"
-            label="用户昵称"
-            width="150">
+            label="用户昵称">
         </el-table-column>
 
         <el-table-column
@@ -60,8 +59,7 @@
 
         <el-table-column
             prop="userTel"
-            label="用户电话"
-            width="150">
+            label="用户电话">
         </el-table-column>
 
         <el-table-column
@@ -72,19 +70,25 @@
 
         <el-table-column
             prop="createTime"
-            label="创建时间">
+            label="创建时间"
+            width="220">
         </el-table-column>
 
         <el-table-column
             prop="updateTime"
-            label="最后更新时间">
+            label="最后更新时间"
+            width="220">
         </el-table-column>
 
         <el-table-column
             fixed="right"
             label="操作"
-            width="200"
-            :render-header="addUserButton">
+            width="200">
+          <template slot="header">
+            操作
+            <el-button style="margin-left: 10px" type="success" @click="userAddDFVisible=true" icon="el-icon-plus"
+                       circle></el-button>
+          </template>
           <template slot-scope="scope">
             <el-button @click="editUser(scope.row)" type="primary" icon="el-icon-edit" circle></el-button>
 
@@ -104,8 +108,9 @@
           @size-change="handleSizeChange">
       </el-pagination>
     </div>
-    <div>
-      <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
+
+    <div id="user-edit">
+      <el-dialog title="用户信息" :visible.sync="dialogFormVisible" :modal-append-to-body='false'>
 
         <el-form label-width="80px">
           <el-form-item label="头像">
@@ -165,6 +170,24 @@
       </el-dialog>
     </div>
 
+    <div id="user-add">
+      <el-dialog title="用户注册" :visible.sync="userAddDFVisible" :modal-append-to-body='false'>
+
+        <el-form :model="userForm">
+          <el-form-item label="用户名" prop="userName">
+            <el-input v-model="userForm.userName" placeholder="请输入用户姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="用户密码" disabled prop="userPwd">
+            <el-input v-model="userForm.userPwd" placeholder="请输入用户密码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="userAddDFVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addUser(userForm)">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -172,12 +195,13 @@
 import {setCookie} from "@/utils/cookie";
 
 export default {
-  name: "UsersInfo",
+  name: "AdminUsersInfo",
   data() {
     return {
       //菜单活动标签索引
       activeIndex2: '1',
 
+      //用户表
       usersData: [
         {
           userId: '1',
@@ -205,11 +229,14 @@ export default {
       //第一页 点击分类菜单调用pageNum（不写这个变量，方法里直接传1也可以）
       pageNum: 1,
 
-      //dialog
+      //用户信息修改dialog
       dialogFormVisible: false,
       formLabelWidth: '120px',
 
-      //单个用户数据
+      //用户添加dialog
+      userAddDFVisible: false,
+
+      //编辑单个用户数据
       user: {
         userId: '1',
         userImg: 'headDefault.jpg',
@@ -222,6 +249,12 @@ export default {
         userEmail: '9',
         createTime: '10',
         updateTime: '11',
+      },
+
+      //添加用户表
+      userForm: {
+        userName: '',
+        userPwd: ''
       },
 
       //切换确认上传按钮可用状态
@@ -237,14 +270,35 @@ export default {
   },
 
   methods: {
-    //添加用户图标
-    addUserButton() {
-      return (
-          <div>
-            <span>操作　</span>
-            <el-button type="success" icon="el-icon-plus" circle></el-button>
-          </div>
-      )
+
+    //添加用户方法
+    addUser(userForm) {
+      const _this = this
+      axios({
+        method: 'post',
+        url: '/user/regist',
+        params: {
+          name: userForm.userName,
+          pwd: userForm.userPwd
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.userAddDFVisible = false
+          _this.$message({
+            type: 'success',
+            message: _this.userForm.userName + ' 注册成功!'
+          })
+          setTimeout(() => {
+            _this.getUserList(_this.currentPage, _this.pageSize)
+          }, 1500);
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            type: 'error',
+            message: resp.data.msg
+          })
+        }
+      });
     },
 
     //每页xx条
@@ -277,7 +331,13 @@ export default {
       }).then((resp) => {
         // console.log(resp.data)
         if (resp.data.code === 10000) {
-          _this.usersData = resp.data.data.list
+          _this.usersData = resp.data.data.list.filter(user=>{
+            //格式化日期显示 原格式ISO日期
+            user.createTime=this.moment(user.createTime).format("YYYY年MM月DD日 HH:mm:ss")
+            user.updateTime=this.moment(user.updateTime).format("YYYY年MM月DD日 HH:mm:ss")
+
+            return user
+          })
           _this.total = resp.data.data.total
           // console.log(resp.data.data.list)
         }
@@ -291,6 +351,7 @@ export default {
       });
     },
 
+    //显示编辑用户dialog
     editUser(user) {
       const _this = this
       _this.dialogFormVisible = true
@@ -299,6 +360,7 @@ export default {
       _this.headImg = this.headImgUrl + _this.user.userImg
     },
 
+    //根据id删除用户
     deleteUser(id) {
       console.log(id)
       const _this = this
@@ -367,13 +429,12 @@ export default {
       }
     },
 
-
     //确认修改头像
     submitHead(user) {
       const _this = this;
       user.userImg = _this.newImg
 
-      console.log(user)
+      // console.log(user)
 
       axios({
         method: 'put',
@@ -399,14 +460,14 @@ export default {
           _this.$message({
             showClose: true,
             type: 'success',
-            message: '修改成功!'
+            message: resp.data.msg
           });
         }
         if (resp.data.code === 10001) {
           _this.$message({
             showClose: true,
             type: 'error',
-            message: '修改失败!'
+            message: resp.data.msg
           })
         }
       });
@@ -417,62 +478,58 @@ export default {
     //用户信息修改
     userModify(user) {
       const _this = this
+      _this.$confirm('您确定要修改为当前信息吗？', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(() => {
+        axios({
+          method: 'put',
+          url: '/admin/userModify',
+          headers: {
+            token: _this.token
+          },
+          data: {
+            userId: user.userId,
+            userAge: user.userAge,
+            userEmail: user.userEmail,
+            userGender: user.userGender,
+            userImg: user.userImg,
+            userName: user.userName,
+            userNickname: user.userNickname,
+            userTel: user.userTel,
+            userPwd: user.userPwd
+          }
+        }).then((resp) => {
+          if (resp.data.code === 10000) {
 
-      if (true) {
-        _this.$confirm('您确定要修改为当前信息吗？', '提示', {
-          cancelButtonText: '取消',
-          confirmButtonText: '确定',
-          type: 'warning'
-        }).then(() => {
-          axios({
-            method: 'put',
-            url: '/admin/userModify',
-            headers: {
-              token: _this.token
-            },
-            data: {
-              userId: user.userId,
-              userAge: user.userAge,
-              userEmail: user.userEmail,
-              userGender: user.userGender,
-              userImg: user.userImg,
-              userName: user.userName,
-              userNickname: user.userNickname,
-              userTel: user.userTel,
-              userPwd: user.userPwd
-            }
-          }).then((resp) => {
-            if (resp.data.code === 10000) {
-
-              _this.$message({
-                showClose: true,
-                type: 'success',
-                message: '修改成功!'
-              })
-              setTimeout(() => {
-                _this.getUserList(_this.currentPage, _this.pageSize)
-                _this.dialogFormVisible = false
-              }, 1500);
-            }
-            if (resp.data.code === 10001) {
-              _this.$message({
-                showClose: true,
-                type: 'error',
-                message: '修改失败!'
-              })
-            }
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
+            _this.$message({
+              showClose: true,
+              type: 'success',
+              message: resp.data.msg
+            })
+            setTimeout(() => {
+              _this.getUserList(_this.currentPage, _this.pageSize)
+              _this.dialogFormVisible = false
+            }, 1500);
+          }
+          if (resp.data.code === 10001) {
+            _this.$message({
+              showClose: true,
+              type: 'error',
+              message: resp.data.msg
+            })
+          }
         });
-      }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
-
-
   },
+
   created() {
     this.getUserList(this.pageNum, this.pageSize)
     this.token = this.$getCookie('AdminToken')
@@ -483,7 +540,15 @@ export default {
 </script>
 
 <style scoped>
-#userList {
-  width: 1680px;
+#userList{
+  width: auto;
 }
+#userList >>> .el-table {
+  width: 1850px;
+}
+
+#user-add >>> .el-dialog {
+  width: 300px;
+}
+
 </style>

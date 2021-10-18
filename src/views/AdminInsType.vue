@@ -1,40 +1,41 @@
 <template>
   <div>
-    <div id="userList">
+    <div id="insTypeList">
       <el-table
-          :data="usersData"
-          border>
+          :data="insTypesData"
+          border
+          height="671px">
         <el-table-column
             fixed
-            prop="userId"
+            prop="typeId"
             label="类型ID"
             width="100">
         </el-table-column>
 
         <el-table-column
-            prop="userImg"
+            prop="typeImg"
             label="类型图片"
             width="120">
           <template width="90" slot-scope="scope">
-            <img style="width:90px;height: 90px" :src="headImgUrl+scope.row.userImg">
+            <img style="width:90px;height: 90px" :src="insTypeImgUrl+scope.row.typeImg">
           </template>
         </el-table-column>
 
         <el-table-column
-            prop="userName"
+            prop="typeName"
             label="类型名"
             width="150">
         </el-table-column>
 
         <el-table-column
-            prop="userNickname"
-            label="描述"
-            width="150">
+            prop="typeDesc"
+            label="类型描述"
+            width="600">
         </el-table-column>
 
         <el-table-column
-            prop="userPwd"
-            label="等级"
+            prop="typeLevel"
+            label="类型等级"
             width="100">
         </el-table-column>
 
@@ -50,14 +51,16 @@
 
         <el-table-column
             fixed="right"
-            label="操作"
-            width="200"
-            :render-header="addUserButton">
+            width="200">
+          <template slot="header">
+            操作
+            <el-button style="margin-left: 10px" type="success" @click="showAddInsType" icon="el-icon-plus"
+                       circle></el-button>
+          </template>
           <template slot-scope="scope">
-            <el-button @click="editUser(scope.row)" type="primary" icon="el-icon-edit" circle></el-button>
+            <el-button @click="editInsType(scope.row)" type="primary" icon="el-icon-edit" circle></el-button>
 
-            <el-button @click="deleteUser(scope.row.userId)" type="danger" icon="el-icon-delete" circle></el-button>
-
+            <el-button @click="deleteInsType(scope.row.typeId)" type="danger" icon="el-icon-delete" circle></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,63 +75,86 @@
           @size-change="handleSizeChange">
       </el-pagination>
     </div>
-    <div>
-      <el-dialog title="用户信息" :visible.sync="dialogFormVisible">
+
+    <div id="insType-edit">
+      <el-dialog title="乐器类型信息" :visible.sync="editInsTypeFormVisible" :modal-append-to-body='false'>
 
         <el-form label-width="80px">
-          <el-form-item label="头像">
-            <img style="width: 200px; height: 200px" :src="headImg" class="avatar">
+          <el-form-item label="类型图片">
+            <img style="width: 200px; height: 200px" :src="insTypeImg" class="avatar">
             <el-upload
                 class="avatar-uploader"
-                :action="this.baseUrl+'/user/uploadimg'"
+                :action="this.baseUrl+'/insType/uploadimg'"
                 :show-file-list="false"
                 :before-upload="beforeAvatarUpload"
                 :on-success="handleAvatarSuccess">
               <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
-              <el-button type="success" :disabled="imgNotOK" @click="submitHead(user)">确认上传</el-button>
+              <el-button type="success" :disabled="imgNotOK" @click="modifyInsTypeImg(insType)">确认上传</el-button>
             </el-upload>
           </el-form-item>
         </el-form>
 
-        <el-form :model="user">
-          <el-form-item label="用户ID" disabled prop="userId">
-            <el-input v-model="user.userId" disabled></el-input>
+        <el-form :model="insType">
+          <el-form-item label="类型ID" disabled prop="typeId">
+            <el-input v-model="insType.typeId" disabled></el-input>
           </el-form-item>
           <el-form-item label="创建时间" disabled prop="updateTime">
-            <el-input v-model="user.updateTime" disabled></el-input>
+            <el-input v-model="insType.createTime" disabled></el-input>
           </el-form-item>
           <el-form-item label="更新时间" disabled prop="updateTime">
-            <el-input v-model="user.updateTime" disabled></el-input>
+            <el-input v-model="insType.updateTime" disabled></el-input>
           </el-form-item>
-          <el-form-item label="用户密码" disabled prop="userPwd">
-            <el-input v-model="user.userPwd"></el-input>
+          <el-form-item label="类型描述" prop="typeDesc">
+            <el-input v-model="insType.typeDesc"></el-input>
           </el-form-item>
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="user.userName" placeholder="请输入员工姓名"></el-input>
+          <el-form-item label="类型名" prop="typeName">
+            <el-input v-model="insType.typeName" placeholder="请输入乐器类型名"></el-input>
           </el-form-item>
-          <el-form-item label="用户昵称" prop="userNickname">
-            <el-input v-model="user.userNickname"></el-input>
-          </el-form-item>
-          <el-form-item label="用户性别" prop="userGender">
-            <el-select v-model="user.userGender">
-              <el-option label="男" value="male"></el-option>
-              <el-option label="女" value="female"></el-option>
-              <el-option label="保密" value=''></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="用户年龄" prop="userAge">
-            <el-input v-model.number="user.userAge"></el-input>
-          </el-form-item>
-          <el-form-item label="用户电话" prop="userTel">
-            <el-input v-model.number="user.userTel"></el-input>
-          </el-form-item>
-          <el-form-item label="用户邮箱" prop="userEmail">
-            <el-input v-model="user.userEmail"></el-input>
+          <el-form-item label="等级" prop="typeLevel">
+            <el-input v-model="insType.typeLevel" placeholder="请输入乐器类型等级"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="userModify(user)">确 定</el-button>
+          <el-button @click="editInsTypeFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="insTypeModify(insType)">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
+    <div id="insType-add">
+      <el-dialog title="乐器类型添加" :visible.sync="insTypeAddDFVisible" :modal-append-to-body='false'>
+
+        <el-form label-width="80px">
+          <el-form-item label="类型图片">
+            <img style="width: 200px; height: 200px" :src="insTypeImg" class="avatar">
+            <el-upload
+                class="avatar-uploader"
+                :action="this.baseUrl+'/insType/uploadimg'"
+                :show-file-list="false"
+                :before-upload="beforeAvatarUpload"
+                :on-success="handleAvatarSuccess">
+              <el-button slot="trigger" style="margin-right:20px ">选择文件</el-button>
+              <el-button type="success" :disabled="imgNotOK" @click="submitInsTypeImg(insTypeForm)">确认上传</el-button>
+              <br>
+              <el-button style="margin-top: 20px" @click="resetImg">恢复默认</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+
+        <el-form :model="insTypeForm">
+          <el-form-item label="类型名" prop="typeName">
+            <el-input v-model="insTypeForm.typeName" placeholder="请输入乐器类型名"></el-input>
+          </el-form-item>
+          <el-form-item label="类型描述" prop="typeDesc">
+            <el-input v-model="insTypeForm.typeDesc" placeholder="请输入乐器类型描述"></el-input>
+          </el-form-item>
+          <el-form-item label="类型等级" prop="typeLevel">
+            <el-input v-model="insTypeForm.typeLevel" placeholder="请输入乐器类型等级等级"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="insTypeAddDFVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addInsType(insTypeForm)">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -139,24 +165,22 @@
 <script>
 export default {
   name: "AdminInsType",
+
   data() {
     return {
       //菜单活动标签索引
       activeIndex2: '1',
 
-      usersData: [
+      //乐器类型表
+      insTypesData: [
         {
-          userId: '1',
-          userImg: 'headDefault.jpg',
-          userName: '3',
-          userNickname: '4',
-          userPwd: '5',
-          userAge: '6',
-          userGender: '7',
-          userTel: '19922578281',
-          userEmail: '9',
-          createTime: '10',
-          updateTime: '11',
+          typeId: '',
+          typeName: '',
+          typeImg: this.defaultImgName,
+          typeDesc: '',
+          typeLevel: '',
+          createTime: '',
+          updateTime: '',
         },
       ],
 
@@ -166,86 +190,72 @@ export default {
       //当前分页页数
       currentPage: 1,
       //每页数据个数
-      pageSize: 10,
+      pageSize: 5,
       //分页 ↑
       //第一页 点击分类菜单调用pageNum（不写这个变量，方法里直接传1也可以）
       pageNum: 1,
 
-      //dialog
-      dialogFormVisible: false,
+      //编辑乐器类型dialog
+      editInsTypeFormVisible: false,
       formLabelWidth: '120px',
 
-      //单个用户数据
-      user: {
-        userId: '1',
-        userImg: 'headDefault.jpg',
-        userName: '3',
-        userNickname: '4',
-        userPwd: '5',
-        userAge: '6',
-        userGender: '7',
-        userTel: '19922578281',
-        userEmail: '9',
-        createTime: '10',
-        updateTime: '11',
+      //添加乐器dialog
+      insTypeAddDFVisible: false,
+
+      //添加乐器类型数据
+      insTypeForm: {
+        typeName: '',
+        typeImg: this.defaultImgName,
+        typeDesc: '',
+        typeLevel: '',
+        createTime: '',
+        updateTime: '',
+      },
+
+      //单个乐器类型数据
+      insType: {
+        typeId: '',
+        typeName: '',
+        typeImg: '',
+        typeDesc: '',
+        typeLevel: '',
+        createTime: '',
+        updateTime: '',
       },
 
       //切换确认上传按钮可用状态
       imgNotOK: true,
 
-      //
+      //类型图片是否修改的中间变量
       nowImg: '',
-      //头像是否修改的中间变量
 
-      headImg: '',
+      //类型图片链接
+      insTypeImg: '',
 
     }
   },
 
   methods: {
-    //添加用户图标
-    addUserButton() {
-      return (
-          <div>
-            <span>操作　</span>
-            <el-button type="success" icon="el-icon-plus" circle></el-button>
-          </div>
-      )
-    },
-
-    //每页xx条
-    handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
-      const _this = this
-      _this.pageSize = val;
-      // console.log(this.pageSize)
-      _this.page(_this.currentPage, val)
-
-    },
-
-    //分页（页码翻页部分）
-    page(currentPage) {
-      const _this = this
-      _this.currentPage = currentPage
-      this.getUserList(currentPage, _this.pageSize)
-    },
-
-    //分页获取用户列表
-    getUserList(pageNum, pageSize) {
+    //分页获取乐器类型列表
+    getInsTypeList(pageNum, pageSize) {
       const _this = this
       axios({
         method: 'get',
-        url: '/admin/userList',
+        url: '/insType/pageList',
         params: {
           pageNum: pageNum,
           pageSize: pageSize
         }
       }).then((resp) => {
-        // console.log(resp.data)
         if (resp.data.code === 10000) {
-          _this.usersData = resp.data.data.list
+          _this.insTypesData = resp.data.data.list.filter(insType=>{
+            //格式化日期显示 原格式ISO日期
+            insType.createTime=this.moment(insType.createTime).format("YYYY年MM月DD日 HH:mm:ss")
+            insType.updateTime=this.moment(insType.updateTime).format("YYYY年MM月DD日 HH:mm:ss")
+
+            return insType
+          })
           _this.total = resp.data.data.total
-          // console.log(resp.data.data.list)
         }
         if (resp.data.code === 10001) {
           _this.$message({
@@ -257,41 +267,135 @@ export default {
       });
     },
 
-    editUser(user) {
+    //分页（页码翻页部分）
+    page(currentPage) {
       const _this = this
-      _this.dialogFormVisible = true
-      _this.user = user
-      _this.user.userPwd = '******'
-      _this.headImg = this.headImgUrl + _this.user.userImg
+      _this.currentPage = currentPage
+      this.getInsTypeList(currentPage, _this.pageSize)
     },
 
-    deleteUser(id) {
-      console.log(id)
+    //每页xx条handle
+    handleSizeChange(val) {
       const _this = this
-      _this.$confirm('您确定要删除当前用户吗？', '提示', {
+      _this.pageSize = val;
+      _this.page(_this.currentPage, val)
+    },
+
+    //显示编辑dialog
+    editInsType(insType) {
+      const _this = this
+      _this.editInsTypeFormVisible = true
+      _this.insType = insType
+      _this.insTypeImg = this.insTypeImgUrl + _this.insType.typeImg
+    },
+
+    //显示乐器类型添加dialog
+    showAddInsType() {
+      const _this = this
+      _this.insTypeAddDFVisible = true
+      _this.insTypeImg = this.insTypeImgUrl + this.defaultImgName
+    },
+
+    //类型图片上传检查
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error('上传乐器类型图片大小不能超过 2MB!');
+      }
+      return isLt2M;
+    },
+
+    //类型图片上传回显
+    handleAvatarSuccess(res) {
+      const _this = this
+      if (res.code === 10000) {
+        _this.imgNotOK = false
+        _this.insTypeImg = this.insTypeImgUrl + res.data
+        _this.newImg = res.data
+      }
+      if (res.code === 10001) {
+        this.$message.error(res.msg);
+      }
+    },
+
+    //确认修改类型图片
+    modifyInsTypeImg(insType) {
+      const _this = this;
+      insType.typeImg = _this.newImg
+
+      axios({
+        method: 'put',
+        url: '/insType/modify',
+        headers: {
+          token: _this.token
+        },
+        data: {
+          typeId: insType.typeId,
+          typeName: insType.typeName,
+          typeImg: insType.typeImg,
+          typeDesc: insType.typeDesc,
+          typeLevel: insType.typeLevel,
+          createTime: insType.createTime,
+          updateTime: insType.updateTime,
+          // insType: insType
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.getInsTypeList(_this.currentPage, _this.pageSize)
+          _this.$message({
+            showClose: true,
+            type: 'success',
+            message: resp.data.msg
+          });
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            type: 'error',
+            message: resp.data.msg
+          })
+        }
+      });
+
+
+    },
+
+    //乐器类型信息修改
+    insTypeModify(insType) {
+      const _this = this
+
+      _this.$confirm('您确定要修改为当前信息吗？', '提示', {
         cancelButtonText: '取消',
         confirmButtonText: '确定',
         type: 'warning'
       }).then(() => {
         axios({
-          method: 'delete',
-          url: '/admin/userDelete',
+          method: 'put',
+          url: '/insType/modify',
           headers: {
             token: _this.token
           },
-          params: {
-            id: id,
+          data: {
+            typeId: insType.typeId,
+            typeName: insType.typeName,
+            typeImg: insType.typeImg,
+            typeDesc: insType.typeDesc,
+            typeLevel: insType.typeLevel,
+            createTime: insType.createTime,
+            updateTime: insType.updateTime,
           }
         }).then((resp) => {
           if (resp.data.code === 10000) {
+
             _this.$message({
               showClose: true,
               type: 'success',
               message: resp.data.msg
             })
             setTimeout(() => {
-              _this.getUserList(_this.currentPage, _this.pageSize)
-              _this.dialogFormVisible = false
+              _this.getInsTypeList(_this.currentPage, _this.pageSize)
+              _this.editInsTypeFormVisible = false
             }, 1500);
           }
           if (resp.data.code === 10001) {
@@ -310,152 +414,114 @@ export default {
       });
     },
 
-    //头像上传检查
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isLt2M;
-    },
-
-    //头像上传回显
-    handleAvatarSuccess(res) {
+    //根据id删除乐器类型
+    deleteInsType(id) {
       const _this = this
-      if (res.code === 10000) {
-        _this.imgNotOK = false
-        _this.headImg = this.headImgUrl + res.data
-        _this.newImg = res.data
-      }
-      if (res.code === 10001) {
-        this.$message.error(res.msg);
-      }
+      _this.$confirm('您确定要删除当前乐器类型吗？', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(() => {
+        axios({
+          method: 'delete',
+          url: '/insType/delete',
+          headers: {
+            token: _this.token
+          },
+          params: {
+            insTypeId: id,
+          }
+        }).then((resp) => {
+          if (resp.data.code === 10000) {
+            _this.$message({
+              showClose: true,
+              type: 'success',
+              message: resp.data.msg
+            })
+            setTimeout(() => {
+              _this.getInsTypeList(_this.currentPage, _this.pageSize)
+              _this.editInsTypeFormVisible = false
+            }, 1500);
+          }
+          if (resp.data.code === 10001) {
+            _this.$message({
+              showClose: true,
+              type: 'error',
+              message: resp.data.msg
+            })
+          }
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
 
+    //确认上传乐器类型图片
+    submitInsTypeImg(insType) {
+      const _this = this
+      insType.typeImg = _this.newImg
+    },
 
-    //确认修改头像
-    submitHead(user) {
-      const _this = this;
-      user.userImg = _this.newImg
+    //重置乐器类型图片
+    resetImg() {
+      const _this = this
+      _this.insType.typeImg = this.defaultImgName
+      _this.insTypeImg = this.insTypeImgUrl + this.defaultImgName
+    },
 
-      console.log(user)
-
+    //添加乐器类型
+    addInsType(insTypeForm) {
+      const _this = this
       axios({
-        method: 'put',
-        url: '/admin/userModify',
-        headers: {
-          token: _this.token
-        },
+        method: 'post',
+        url: '/insType/add',
         data: {
-          userId: user.userId,
-          userImg: user.userImg,
-          userAge: user.userAge,
-          userEmail: user.userEmail,
-          userGender: user.userGender,
-          userName: user.userName,
-          userNickname: user.userNickname,
-          userTel: user.userTel,
-          userPwd: user.userPwd
+          typeName: insTypeForm.typeName,
+          typeImg: insTypeForm.typeImg,
+          typeDesc: insTypeForm.typeDesc,
+          typeLevel: insTypeForm.typeLevel,
+
 
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
-          _this.getUserList(_this.currentPage, _this.pageSize)
+          _this.insTypeAddDFVisible = false
           _this.$message({
-            showClose: true,
             type: 'success',
-            message: '修改成功!'
-          });
+            message: resp.data.msg
+          })
+          setTimeout(() => {
+            _this.getInsTypeList(_this.currentPage, _this.pageSize)
+          }, 1500);
         }
         if (resp.data.code === 10001) {
           _this.$message({
-            showClose: true,
             type: 'error',
-            message: '修改失败!'
+            message: resp.data.msg
           })
         }
       });
-
-
-    },
-
-    //用户信息修改
-    userModify(user) {
-      const _this = this
-
-      if (true) {
-        _this.$confirm('您确定要修改为当前信息吗？', '提示', {
-          cancelButtonText: '取消',
-          confirmButtonText: '确定',
-          type: 'warning'
-        }).then(() => {
-          axios({
-            method: 'put',
-            url: '/admin/userModify',
-            headers: {
-              token: _this.token
-            },
-            data: {
-              userId: user.userId,
-              userAge: user.userAge,
-              userEmail: user.userEmail,
-              userGender: user.userGender,
-              userImg: user.userImg,
-              userName: user.userName,
-              userNickname: user.userNickname,
-              userTel: user.userTel,
-              userPwd: user.userPwd
-            }
-          }).then((resp) => {
-            if (resp.data.code === 10000) {
-
-              _this.$message({
-                showClose: true,
-                type: 'success',
-                message: '修改成功!'
-              })
-              setTimeout(() => {
-                _this.getUserList(_this.currentPage, _this.pageSize)
-                _this.dialogFormVisible = false
-              }, 1500);
-            }
-            if (resp.data.code === 10001) {
-              _this.$message({
-                showClose: true,
-                type: 'error',
-                message: '修改失败!'
-              })
-            }
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      }
-    },
-
+    }
 
   },
-  created() {
-    this.getUserList(this.pageNum, this.pageSize)
-    this.token = this.$getCookie('AdminToken')
 
+  created() {
+    //分页获取乐器类型列表
+    this.getInsTypeList(this.pageNum, this.pageSize)
   }
 
 }
 </script>
 
 <style scoped>
-#userList {
-  width: 1680px;
+#insTypeList >>> .el-table {
+  width: 1850px;
 }
-</style>
+
+#insType-add >>> .el-dialog {
+  width: 600px;
 }
-</script>
-
-<style scoped>
-
 </style>

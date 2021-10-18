@@ -277,7 +277,7 @@ export default {
       const _this = this
       axios({
         method: 'get',
-        url: '/ins/list',
+        url: '/ins/pageList',
         params: {
           pageNum: pageNum,
           pageSize: pageSize

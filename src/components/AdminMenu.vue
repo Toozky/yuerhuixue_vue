@@ -8,6 +8,12 @@
                background-color="#222222"
                text-color="#fff"
                active-text-color="#fff">
+        <el-menu-item style="width:65px;">
+          <i
+              style="color: #909399;font-size: x-large;" class="el-icon-s-operation"
+              @click="verticalMenuShow"></i>
+        </el-menu-item>
+
         <el-menu-item style="font-size: large">悦耳慧学后台管理系统</el-menu-item>
 
         <el-menu-item index="1" @click="AdminIndexPage">系统设置</el-menu-item>
@@ -58,6 +64,8 @@ export default {
         adminNickname: "",
         adminPwd: "",
       },
+      //纵向菜单显示状态
+      verticalMenu:false,
     }
   },
 
@@ -75,6 +83,13 @@ export default {
     //菜单跳转 ↑
 
     //菜单用户方法 ↓
+    //切换纵向菜单显示
+    verticalMenuShow(){
+      const bus=this.$bus
+      const _this=this
+      _this.verticalMenu=!_this.verticalMenu
+      bus.$emit('verticalMenuChange',_this.verticalMenu)
+    },
     // 用户登录
     adminLogin() {
       const _this = this

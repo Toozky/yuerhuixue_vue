@@ -1,7 +1,7 @@
 import AdminIndex from "@/views/AdminIndex";
 import AdminMain from "@/views/AdminMain";
 import AdminInfo from "@/views/AdminInfo";
-import UsersInfo from "@/views/UsersInfo";
+import AdminUsersInfo from "@/views/AdminUsersInfo";
 import AdminModifyPwd from '@/views/AdminModifyPwd';
 import AdminAdd from '@/views/AdminAdd'
 
@@ -33,11 +33,11 @@ const adminroutes=[
                 component: AdminModifyPwd,
             },
             {
-                path:'UsersInfo',
+                path:'AdminUsersInfo',
                 name:'用户管理',
                 icon:'el-icon-user',
                 show:true,
-                component:UsersInfo
+                component:AdminUsersInfo
             },
             {
                 path:'AdminMainPage',

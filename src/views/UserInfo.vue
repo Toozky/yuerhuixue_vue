@@ -241,7 +241,7 @@ export default {
                 _this.$message({
                   showClose: true,
                   type: 'success',
-                  message: '修改成功!'
+                  message: resp.data.msg
                 })
                 setTimeout(() => {
                   _this.$router.push('/Main')
@@ -251,7 +251,7 @@ export default {
                 _this.$message({
                   showClose: true,
                   type: 'error',
-                  message: '修改失败!'
+                  message: resp.data.msg
                 })
               }
             });
@@ -328,14 +328,14 @@ export default {
           _this.$message({
             showClose: true,
             type: 'success',
-            message: '修改成功!'
+            message: resp.data.msg
           });
         }
         if (resp.data.code === 10001) {
           _this.$message({
             showClose: true,
             type: 'error',
-            message: '修改失败!'
+            message: resp.data.msg
           })
         }
       });
