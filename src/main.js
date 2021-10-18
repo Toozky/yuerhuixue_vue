@@ -41,6 +41,5 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
-    echarts,
     render: h => h(App)
 }).$mount('#app')
