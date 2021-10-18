@@ -189,4 +189,9 @@ export default {
   z-index: 1;
 }
 
+/*纵向菜单展开折叠*/
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
 </style>

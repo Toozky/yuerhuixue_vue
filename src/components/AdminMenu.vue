@@ -10,7 +10,7 @@
                active-text-color="#fff">
         <el-menu-item style="width:65px;">
           <i
-              style="color: #909399;font-size: x-large;" class="el-icon-s-operation"
+              style="color: #ffffff;font-size: x-large;" class="el-icon-s-operation"
               @click="verticalMenuShow"></i>
         </el-menu-item>
 
