@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "echarts": "^5.2.1",
     "element-ui": "^2.4.5",
     "jquery": "^3.6.0",
     "js-base64": "^3.7.2",

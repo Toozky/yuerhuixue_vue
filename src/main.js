@@ -31,10 +31,16 @@ Vue.prototype.$bus = new Vue()
 import moment from "moment/moment";
 Vue.prototype.moment=moment
 
+//引入echarts
+import * as echarts from 'echarts'
+Vue.prototype.$echarts=echarts
+
+
 Vue.config.productionTip = false
 
 new Vue({
     router,
     store,
+    echarts,
     render: h => h(App)
 }).$mount('#app')
