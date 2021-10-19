@@ -23,6 +23,7 @@ export default {
         { value: 30, name: 'rose 4' },
         { value: 28, name: 'rose 5' },
       ],
+
       //最贵乐器top5
       expensiveIns:[
         ['a', 'b', 'c', 'd', 'e'],
