@@ -79,6 +79,7 @@
 <script>
 import {setCookie} from "@/utils/cookie";
 import Menu from '@/components/Menu'
+
 export default {
   name: "UserInfo",
   components: {
@@ -96,6 +97,8 @@ export default {
         }
         if (value < 18) {
           callback(new Error('必须年满18岁'));
+        } else {
+          callback();
         }
       }, 1000);
     };
@@ -106,6 +109,8 @@ export default {
       var verify = /^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
       if (!verify.test(value)) {
         callback(new Error('请输入正确的邮箱格式！'));
+      } else {
+        callback();
       }
     };
     var checkUserTel = (rule, value, callback) => {
@@ -118,6 +123,8 @@ export default {
         }
         if (value < 10000 || value > 999999999999) {
           callback(new Error('长度在 5 到 12 个字符'));
+        } else {
+          callback();
         }
 
       }, 1000);
@@ -134,7 +141,7 @@ export default {
       //头像回显
       headImg: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       //用户信息页背景
-      userBackgroundImg:require('@/assets/img/user/userbackground.jpg'),
+      userBackgroundImg: require('@/assets/img/user/userbackground.jpg'),
       //头像是否修改的中间变量
       newImg: '',
       //切换确认上传按钮可用状态
@@ -235,8 +242,8 @@ export default {
                 setCookie("userImg", user.userImg, 30)
 
                 //将用户信息发送至菜单组件
-                const bus=this.$bus
-                bus.$emit('formChange',_this.form)
+                const bus = this.$bus
+                bus.$emit('formChange', _this.form)
 
                 _this.$message({
                   showClose: true,
@@ -262,7 +269,7 @@ export default {
             });
           });
 
-        }else {
+        } else {
           _this.$alert('请检查输入信息是否正确', '提示', {
             confirmButtonText: '确定',
           });
@@ -274,12 +281,12 @@ export default {
     //头像上传回显
     handleAvatarSuccess(res) {
       const _this = this
-      if (res.code===10000){
-        _this.imgNotOK=false
+      if (res.code === 10000) {
+        _this.imgNotOK = false
         _this.headImg = this.headImgUrl + res.data
         _this.newImg = res.data
       }
-      if (res.code===10001){
+      if (res.code === 10001) {
         this.$message.error(res.msg);
       }
     },
@@ -296,7 +303,7 @@ export default {
     submitHead() {
       const _this = this;
       // console.log(_this.newImg)
-      _this.form.userImg=_this.newImg
+      _this.form.userImg = _this.newImg
 
       axios({
         method: 'put',
@@ -363,7 +370,7 @@ export default {
 
       //上传回显头像
       _this.headImg = this.headImgUrl + _this.form.userImg
-    }else {
+    } else {
       this.$router.push('/UserLogin');
       _this.$message({
         showClose: true,
@@ -378,30 +385,32 @@ export default {
 
 <style scoped>
 /*menu*/
-#menu{
+#menu {
   width: 100%;
   height: 60px;
-  background-color:#545c64;
+  background-color: #545c64;
 }
-#menuText{
+
+#menuText {
   width: 1200px;
   height: auto;
   margin: 0px auto;
 }
 
 /*背景图片*/
-#userBackgroundImg{
+#userBackgroundImg {
   width: 100%;
   margin-top: 100px;
   position: absolute;
   z-index: 1;
 }
-#userBackgroundImg img{
+
+#userBackgroundImg img {
   width: 100%;
 }
 
 /*信息修改div*/
-#userinfo{
+#userinfo {
   position: relative;
   z-index: 2;
   width: 400px;
