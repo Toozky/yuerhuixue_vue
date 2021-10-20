@@ -151,7 +151,7 @@
           <el-form-item label="乐器类型" prop="typeId">
             <el-select v-model="instrument.typeId">
               <div v-for="insType in insTypeList">
-                <el-option :label="insType.typeName" :value="insType.typeId"></el-option>
+                <el-option :label="insType.typeName" :value="insType.typeId">{{insType.typeName}}</el-option>
               </div>
             </el-select>
           </el-form-item>
@@ -201,9 +201,9 @@
             <el-input v-model="instrumentForm.insStock" placeholder="请输入乐器库存"></el-input>
           </el-form-item>
           <el-form-item label="乐器类型" prop="typeId">
-            <el-select v-model="instrument.typeId">
-              <div v-for="insType in insTypeList">
-                <el-option :label="insType.typeName" :value="insType.typeId"></el-option>
+            <el-select v-model="instrumentForm.typeId">
+              <div v-for="insType2 in insTypeList">
+                <el-option :label="insType2.typeName" :value="insType2.typeId"></el-option>
               </div>
             </el-select>
           </el-form-item>
@@ -413,8 +413,8 @@ export default {
           insPrice: instrument.insPrice,
           insStock: instrument.insStock,
           typeId: instrument.typeId,
-          createTime: instrument.createTime,
-          updateTime: instrument.updateTime,
+          createTime: null,
+          updateTime: null,
           // instrument: instrument
         }
       }).then((resp) => {
@@ -442,6 +442,7 @@ export default {
     instrumentModify(instrument) {
       const _this = this
 
+      console.log(instrument)
       _this.$confirm('您确定要修改为当前信息吗？', '提示', {
         cancelButtonText: '取消',
         confirmButtonText: '确定',
@@ -462,8 +463,8 @@ export default {
             insPrice: instrument.insPrice,
             insStock: instrument.insStock,
             typeId: instrument.typeId,
-            createTime: instrument.createTime,
-            updateTime: instrument.updateTime,
+            createTime: null,
+            updateTime: null,
           }
         }).then((resp) => {
           if (resp.data.code === 10000) {
@@ -496,6 +497,7 @@ export default {
 
     //根据id删除乐器
     deleteInstrument(id) {
+      console.log(id)
       const _this = this
       _this.$confirm('您确定要删除当前乐器类型吗？', '提示', {
         cancelButtonText: '取消',
@@ -509,7 +511,7 @@ export default {
             token: _this.token
           },
           params: {
-            insinsId: id,
+            insId: id,
           }
         }).then((resp) => {
           if (resp.data.code === 10000) {
@@ -555,6 +557,8 @@ export default {
     //添加乐器
     addInstrument(instrumentForm) {
       const _this = this
+
+      console.log(instrumentForm)
       axios({
         method: 'post',
         url: '/ins/add',
@@ -566,6 +570,8 @@ export default {
           insPrice: instrumentForm.insPrice,
           insStock: instrumentForm.insStock,
           typeId: instrumentForm.typeId,
+          createTime: null,
+          updateTime: null,
 
         }
       }).then((resp) => {

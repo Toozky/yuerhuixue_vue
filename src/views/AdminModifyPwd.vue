@@ -37,25 +37,26 @@ export default {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入新密码'));
-      } else {
-        if (this.ruleForm.pwd === this.ruleForm.checkPass) {
-          callback(new Error('新密码不能与旧密码一致！'));
-        }
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-
-        callback();
       }
+      if (this.ruleForm.pwd === this.ruleForm.checkPass) {
+        callback(new Error('新密码不能与旧密码一致！'));
+      }
+      if (this.ruleForm.checkPass !== '') {
+        this.$refs.ruleForm.validateField('checkPass');
+      }
+
+      callback();
+
     };
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入一次新密码'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
       }
+      if (value !== this.ruleForm.pass) {
+        callback(new Error('两次输入密码不一致!'));
+      }
+      callback();
+
     };
     //录入信息自定义验证规则 ↑
     return {
@@ -155,7 +156,8 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       const _this = this
-      _this.ruleForm.id = _this.$route.params.id
+      // _this.ruleForm.id = _this.$route.params.id
+      _this.ruleForm.id=_this.form.adminId
     }
   },
 
@@ -183,9 +185,11 @@ export default {
 
       //获取用户id
 
-      _this.ruleForm.id = _this.$route.query.adminID
+      // _this.ruleForm.id = _this.$route.query.adminID
       // console.log(_this.ruleForm.id)
       // console.log(_this.$route.query.adminID)
+      _this.ruleForm.id=_this.form.adminId
+
 
 
     } else {
