@@ -44,8 +44,9 @@
           <el-menu-item index="6-1" v-show="!isLogin" @click="userLogin">登录</el-menu-item>
           <el-menu-item index="6-2" v-show="isLogin" @click="userInfo">修改信息</el-menu-item>
           <el-menu-item index="6-3" v-show="isLogin" @click="userModifyPwd(id)">修改密码</el-menu-item>
-          <el-menu-item index="6-4" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
-          <el-menu-item index="6-5" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
+          <el-menu-item index="6-4" v-show="isLogin" @click="userAddrInfo(id)">地址管理</el-menu-item>
+          <el-menu-item index="6-5" v-show="isLogin" @click="userShoppingCart(id)">查看购物车</el-menu-item>
+          <el-menu-item index="6-6" v-show="isLogin" @click="userLogout">注销登录</el-menu-item>
         </el-submenu>
       </el-menu>
     </div>
@@ -147,6 +148,19 @@ export default {
         },
         params: {
           id: userId,
+        }
+      });
+    },
+    //地址管理
+    userAddrInfo(id){
+      const _this = this
+      this.$router.push({
+        name: 'UserAddr',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: id,
         }
       });
     },

@@ -7,6 +7,7 @@ import UserAdd from '../views/UserAdd.vue'
 import UserModifyPwd from '../views/UserModifyPwd.vue'
 import InsType from '../views/InsType.vue'
 import GoodBuy from '../views/GoodBuy.vue'
+import UserAddr from "@/views/UserAddr";
 
 
 import UserUploadImg from '../views/UserUploadImg.vue'
@@ -75,6 +76,10 @@ const routes = [
         path: '/AdminLogin',
         name: 'AdminLogin',
         component: AdminLogin
+    },{
+        path: '/UserAddr',
+        name: 'UserAddr',
+        component: UserAddr,
     },
     ...adminindex,
     ...shopindex
