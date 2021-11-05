@@ -3,6 +3,7 @@ import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Moment from 'moment'
 import './plugins/element.js'
 
 import {setCookie, getCookie, checkCookie, clearCookie} from '@/utils/cookie';
@@ -11,6 +12,11 @@ Vue.prototype.$setCookie = setCookie;
 Vue.prototype.$getCookie = getCookie;
 Vue.prototype.$checkCookie = checkCookie;
 Vue.prototype.$clearCookie = clearCookie;
+
+// 定义全局时间戳过滤器
+Vue.filter('dateFormat', function (value) {
+    return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+})
 
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)

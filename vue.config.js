@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 module.exports = {
     devServer: {
-        port: 8080,     // 端口号
+        port: 8989,     // 端口号
     },
 };

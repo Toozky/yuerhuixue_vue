@@ -161,8 +161,8 @@ export default {
       },
       //用户地址
       userAddress: {
-        addrId: 0,
-        userId: 0,
+        addrId: '',
+        userId: '',
         receiverName: '',
         receiverTel: '',
         receiverAddr: '',
@@ -171,8 +171,8 @@ export default {
       },
       userAddresses: [
         {
-          addrId: 0,
-          userId: 0,
+          addrId: '',
+          userId: '',
           receiverName: '',
           receiverTel: '',
           receiverAddr: '',
@@ -220,7 +220,7 @@ export default {
       const _this = this
       axios({
         method: 'get',
-        url: '/userAddr/list',
+        url: '/userAddr/pageList',
         params: {
           pageNum: pageNum,
           pageSize: pageSize,
@@ -228,13 +228,7 @@ export default {
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
-          _this.userAddresses = resp.data.data.list.filter(userAddress=>{
-            //格式化日期显示 原格式ISO日期
-            userAddress.createTime=this.moment(userAddress.createTime).format("YYYY年MM月DD日 HH:mm:ss")
-            userAddress.updateTime=this.moment(userAddress.updateTime).format("YYYY年MM月DD日 HH:mm:ss")
-
-            return userAddress
-          })
+          _this.userAddresses = resp.data.data.list
           _this.total = resp.data.data.total
         }
         if (resp.data.code === 10001) {
@@ -252,8 +246,6 @@ export default {
       const _this=this
       _this.userAddress=userAddr
       _this.addrEditFormVisible=true
-      console.log(_this.userAddress)
-
     },
 
     //修改用户地址
@@ -267,13 +259,13 @@ export default {
         axios({
           method: 'put',
           url: '/userAddr/modify',
-          params: {
+          data: {
             addrId: userAddress.addrId,
-            createTime:userAddress.createTime,
+            createTime:null,
             receiverAddr:userAddress.receiverAddr,
             receiverName:userAddress.receiverName,
             receiverTel:userAddress.receiverTel,
-            updateTime:userAddress.updateTime,
+            updateTime:null,
             userId: userAddress.userId,
           }
         }).then((resp) => {
@@ -319,17 +311,19 @@ export default {
         confirmButtonText: '确定',
         type: 'warning'
       }).then(() => {
+        console.log(userAddress.receiverAddr)
+        console.log(userAddress.receiverName)
         axios({
           method: 'post',
           url: '/userAddr/add',
-          params: {
-            addrId: userAddress.addrId,
-            createTime:userAddress.createTime,
+          data: {
+            addrId: null,
+            createTime:null,
             receiverAddr:userAddress.receiverAddr,
             receiverName:userAddress.receiverName,
             receiverTel:userAddress.receiverTel,
-            updateTime:userAddress.updateTime,
-            userId: userAddress.userId,
+            updateTime:null,
+            userId: _this.userAddress.userId,
           }
         }).then((resp) => {
           if (resp.data.code === 10000) {
