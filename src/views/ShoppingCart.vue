@@ -1,20 +1,75 @@
 <template>
-<div>
+  <div>
 
-  <Menu :activeIndex2=activeIndex2 :form=form></Menu>
+    <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
-</div>
+    <div id="shoppingCartList">
+      <el-card>
+        <div style="text-align: center;opacity: 0.75;margin: 20px auto;">
+          <a style="font-size: x-large;">我的购物车</a>
+          <br>
+          <br>
+        </div>
+
+        <div v-for="cart in shoppingCartList">
+          <el-card>
+            <div style="float:left;width:160px;">
+              <img style="width:160px;height:160px" :src="insImgUrl+cart.ins.insImg">
+            </div>
+            <div style="float: left;width: 650px;">
+              名称：{{cart.ins.insName}}<br>
+              单价：{{cart.ins.insPrice}}<br>
+              总价：{{cart.ins.insPrice*cart.cartNumber}}<br>
+            </div>
+            <div style="float:left;line-height: 150px">
+              数量：
+              <el-button-group>
+                <el-button :disabled="cart.cartNumber===1?true:false" icon="el-icon-minus"
+                           @click="--cart.cartNumber,modifyCart(cart.cartId,cart.cartNumber)"
+                           circle
+                ></el-button>
+                <el-button style="width:80px">{{cart.cartNumber}}</el-button>
+                <el-button icon="el-icon-plus"
+                           @click="++cart.cartNumber,modifyCart(cart.cartId,cart.cartNumber)"
+                           circle></el-button>
+              </el-button-group>
+              <el-button style="margin-left:20px;" type="danger" icon="el-icon-delete"
+                         @click="deleteCart(cart.cartId)"
+                         circle></el-button>
+            </div>
+          </el-card>
+          <br>
+        </div>
+
+        <div style="float:left">
+          <br>
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :page-size=pageSize
+              :total=total
+              @current-change=page
+              @size-change="handleSizeChange">
+          </el-pagination>
+          <br>
+        </div>
+
+      </el-card>
+    </div>
+
+  </div>
 </template>
 
 <script>
 import Menu from '@/components/Menu'
+
 export default {
   name: "ShoppingCart",
   components: {
     Menu,
   },
-  data(){
-    return{
+  data() {
+    return {
       //菜单活动标签索引
       activeIndex2: '6-1',
       // 菜单头像
@@ -36,10 +91,129 @@ export default {
         userPwd: '',
         userTel: '',
       },
+
+      //用户购物车列表
+      shoppingCartList: [
+        {
+          cartId: null,
+          cartNumber: 1,
+          userId: null,
+          createTime: null,
+          ins: {
+            insId: null,
+            insName: '',
+            insImg: '',
+            insDesc: '',
+            insBrand: '',
+            insPrice: '',
+            insStock: '',
+            typeId: '',
+            createTime: '',
+            updateTime: '',
+          }
+        },
+      ],
+
+      //分页 ↓
+      //查询数据总数
+      total: 1,
+      //当前分页页数
+      currentPage: 1,
+      //每页数据个数
+      pageSize: 5,
+      //分页 ↑
+      //第一页 点击分类菜单调用pageNum（不写这个变量，方法里直接传1也可以）
+      pageNum: 1,
     }
   },
-  methods:{
+  methods: {
+    //分页（页码翻页部分）
+    page(currentPage) {
+      const _this = this
+      _this.currentPage = currentPage
+      this.getShoppingCartList(currentPage, _this.pageSize)
+    },
 
+    //每页xx条handle
+    handleSizeChange(val) {
+      const _this = this
+      _this.pageSize = val;
+      _this.page(_this.currentPage, val)
+    },
+    //获取购物车列表
+    getShoppingCartList(pageNum, pageSize){
+      const _this = this
+      axios({
+        method: 'get',
+        url: '/shoppingCart/list',
+        params: {
+          pageNum: pageNum,
+          pageSize: pageSize,
+          userId:_this.form.userId,
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          console.log(resp.data.data.list)
+          _this.shoppingCartList = resp.data.data.list
+          _this.total = resp.data.data.total
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            message: resp.data.msg,
+            type: 'error'
+          });
+        }
+      });
+    },
+
+    //修改购物车商品数量
+    modifyCart(cartId,cartNumber){
+      const _this = this
+      axios({
+        method: 'put',
+        url: '/shoppingCart/modify',
+        params: {
+          cartId: cartId,
+          cartNumber: cartNumber,
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.shoppingCartList = resp.data.data.list
+          _this.total = resp.data.data.total
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            message: resp.data.msg,
+            type: 'error'
+          });
+        }
+      });
+    },
+
+    //删除购物车
+    deleteCart(cartId){
+      const _this = this
+      axios({
+        method: 'delete',
+        url: '/shoppingCart/delete',
+        params: {
+          cartId: cartId,
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.getShoppingCartList(_this.pageNum, _this.pageSize)
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            message: resp.data.msg,
+            type: 'error'
+          });
+        }
+      });
+    }
   },
   created() {
     const _this = this
@@ -62,7 +236,11 @@ export default {
       _this.circleUrl = this.headImgUrl + _this.form.userImg
       //获取用户id
       _this.id = _this.form.userId
-    }else {
+
+      //获取购物车列表
+      _this.getShoppingCartList(_this.pageNum, _this.pageSize)
+
+    } else {
       this.$router.push('/UserLogin');
       _this.$message({
         showClose: true,
@@ -70,21 +248,14 @@ export default {
         message: '您未登录，请先登录'
       });
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-/*menu*/
-#menu {
-  width: 100%;
-  height: 60px;
-  background-color: #545c64;
-}
-
-#menuText {
+#shoppingCartList {
   width: 1200px;
-  height: auto;
-  margin: 0px auto;
+  margin: 75px auto;
+
 }
 </style>

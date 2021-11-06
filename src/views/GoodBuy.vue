@@ -49,7 +49,7 @@
 
         <div id="insBuyBtn">
           <el-button type="danger">　购买　</el-button>
-          <el-button type="success">加入购物车</el-button>
+          <el-button type="success" @click="addShopCart(shoppingCart)">加入购物车</el-button>
         </div>
 
       </el-card>
@@ -122,6 +122,18 @@ export default {
         },
       ],
       receiverAddrChecked:'',
+      //购物车信息
+      shoppingCart:{
+        cartId:null,
+        cartNumber:1,
+        userId:null,
+        createTime:null,
+        ins:{
+          insId:null,
+          insName:'',
+          insImg:'',
+        }
+      },
     }
   },
 
@@ -169,6 +181,44 @@ export default {
         }
       })
     },
+
+    //加入购物车
+    addShopCart(shoppingCart){
+      const _this=this
+      shoppingCart.userId=_this.form.userId
+      shoppingCart.ins.insId=_this.insId
+      shoppingCart.ins.insName=_this.instrument.insName
+      shoppingCart.ins.insImg=_this.instrument.insImg
+      axios({
+        method: 'post',
+        url: '/shoppingCart/add',
+        data: {
+          cartId:shoppingCart.cartId,
+          insId:shoppingCart.ins.insId,
+          insName:shoppingCart.ins.insName,
+          insImg:shoppingCart.ins.insImg,
+          cartNumber:shoppingCart.cartNumber,
+          userId:shoppingCart.userId,
+          createTime:shoppingCart.createTime,
+        }
+      }).then((resp) => {
+        if (resp.data.code === 10000) {
+          _this.$message({
+            showClose: true,
+            message: resp.data.msg,
+            type: 'success'
+          });
+
+        }
+        if (resp.data.code === 10001) {
+          _this.$message({
+            showClose: true,
+            message: resp.data.msg,
+            type: 'error'
+          });
+        }
+      });
+    }
 
   },
 

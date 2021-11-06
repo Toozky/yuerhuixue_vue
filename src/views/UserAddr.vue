@@ -18,13 +18,13 @@
 
         <div v-for="userAddr in userAddresses">
           <div style="float:left">
-            <el-card style="height:90px;width:440px;margin-left: 10px;margin-top: 10px">
-              <div style="float:left;width:300px">
+            <el-card style="height:120px;width:auto;margin-left: 10px;margin-top: 10px">
+              <div style="float:left;width:400px">
                 姓名：{{userAddr.receiverName}}<br>
                 地址：{{userAddr.receiverAddr}}<br>
                 电话：{{userAddr.receiverTel}}<br>
               </div>
-              <div style="float:left">
+              <div style="float:left;margin-left: 10px;line-height:90px">
                 <el-button type="primary" icon="el-icon-edit" @click="showUpdateAddr(userAddr)" circle></el-button>
                 <el-button type="danger" icon="el-icon-delete" @click="deleteAddr(userAddr.addrId)" circle></el-button>
               </div>
@@ -77,7 +77,7 @@
             <el-input v-model="userAddress.receiverTel" placeholder="请输入收货人电话"></el-input>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="addUserAddress(userAddress)">确认修改</el-button>
+        <el-button type="primary" @click="addUserAddress(userAddress)">确认添加</el-button>
       </el-dialog>
     </div>
   </div>
@@ -412,10 +412,10 @@ export default {
 }
 
 #userAddrInfo{
-  width:520px;
+  width:auto;
   position: absolute;
   z-index: 2;
-  margin-top: 90px;
+  margin-top: 10px;
   margin-left:200px;
 }
 </style>
