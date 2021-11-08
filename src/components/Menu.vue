@@ -31,9 +31,9 @@
 
 <!--        <el-menu-item index="3">音乐课程</el-menu-item>-->
 
-        <el-menu-item index="4" @click="userShoppingCart(id)">我的购物车</el-menu-item>
+        <el-menu-item index="4" @click="userShoppingCart(id)" v-if="form.userNickname!==''">我的购物车</el-menu-item>
 
-        <el-menu-item index="5" @click="userOrderInfo(id)">我的订单</el-menu-item>
+        <el-menu-item index="5" @click="userOrderInfo(id)" v-if="form.userNickname!==''">我的订单</el-menu-item>
 
         <el-submenu index="6" style="float: right">
           <template slot="title">
