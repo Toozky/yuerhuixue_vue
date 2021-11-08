@@ -257,6 +257,7 @@ export default {
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
+          _this.$router.push('/ShoppingCart')
           _this.$message({
             showClose: true,
             message: resp.data.msg,
@@ -265,6 +266,7 @@ export default {
 
         }
         if (resp.data.code === 10001) {
+          _this.$router.push('/ShoppingCart')
           _this.$message({
             showClose: true,
             message: resp.data.msg,
