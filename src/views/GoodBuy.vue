@@ -337,6 +337,11 @@ export default {
             if (resp.data.code === 10000) {
               _this.orderDetailList = []
               _this.$router.push('/InsType')
+              _this.$message({
+                showClose: true,
+                message: resp.data.msg,
+                type: 'success'
+              });
             }
             if (resp.data.code === 10001) {
               _this.$message({
@@ -391,7 +396,7 @@ export default {
         _this.userAddr = resp.data.data
         _this.receiverAddrChecked = _this.userAddr[0].receiverAddr
         _this.receiverTelChecked=_this.userAddr[0].receiverTel
-        _this.receiverAddrChecked=_this.userAddr[0].receiverAddr
+        _this.receiverNameChecked=_this.userAddr[0].receiverName
       });
     }
     //获取乐器信息

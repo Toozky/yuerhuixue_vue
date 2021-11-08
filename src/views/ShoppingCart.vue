@@ -390,6 +390,11 @@ export default {
               }
 
               _this.getShoppingCartList(_this.pageNum, _this.pageSize)
+              _this.$message({
+                showClose: true,
+                message: resp.data.msg,
+                type: 'success'
+              });
             }
             if (resp.data.code === 10001) {
               _this.$message({
