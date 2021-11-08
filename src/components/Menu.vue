@@ -29,11 +29,11 @@
 
         <el-menu-item index="2" @click="insTypePage">乐器心选</el-menu-item>
 
-        <el-menu-item index="3">音乐课程</el-menu-item>
+<!--        <el-menu-item index="3">音乐课程</el-menu-item>-->
 
-        <el-menu-item index="4">悦耳论坛</el-menu-item>
+        <el-menu-item index="4" @click="userShoppingCart(id)">我的购物车</el-menu-item>
 
-        <el-menu-item index="5">我的订单</el-menu-item>
+        <el-menu-item index="5" @click="userOrderInfo(id)">我的订单</el-menu-item>
 
         <el-submenu index="6" style="float: right">
           <template slot="title">
@@ -99,6 +99,18 @@ export default {
     insTypePage() {
       const _this = this
       _this.$router.push('/InsType')
+    },
+    userOrderInfo(userId){
+      const _this = this
+      this.$router.push({
+        name: 'OrderInfo',
+        headers: {
+          token: _this.token
+        },
+        params: {
+          id: userId,
+        }
+      });
     },
     //菜单跳转 ↑
 

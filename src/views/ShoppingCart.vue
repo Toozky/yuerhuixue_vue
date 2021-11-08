@@ -87,7 +87,7 @@
         </div>
 
         <div style="float: left">
-          <el-button style="margin-top:80px" type="success" @click="buyGoods" round>购买</el-button>
+          <el-button style="margin-top:80px" type="success" @click="buyGoods" :disabled="shoppingCartList.length<1" round>购买</el-button>
         </div>
 
       </el-card>
@@ -107,7 +107,7 @@ export default {
   data() {
     return {
       //菜单活动标签索引
-      activeIndex2: '6-1',
+      activeIndex2: '4',
       // 菜单头像
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       //登录状态 切换菜单用户功能显示
@@ -329,8 +329,6 @@ export default {
       orders.receiverAddr = _this.receiverAddrChecked
       orders.receiverTel = _this.receiverTelChecked
 
-      console.log(orders)
-
       axios({
         method: 'post',
         url: '/order/addOrder',
@@ -385,6 +383,12 @@ export default {
             }
           }).then((resp) => {
             if (resp.data.code === 10000) {
+              _this.orderDetailList=[]
+              let shoppingCartList = _this.shoppingCartList
+              for(let i = 0; i < shoppingCartList.length; i++){
+                _this.deleteCart(shoppingCartList[i].cartId)
+              }
+
               _this.getShoppingCartList(_this.pageNum, _this.pageSize)
             }
             if (resp.data.code === 10001) {
@@ -396,11 +400,7 @@ export default {
             }
           });
 
-          _this.$message({
-            showClose: true,
-            message: resp.data.msg,
-            type: 'success'
-          });
+
 
         }
         if (resp.data.code === 10001) {
@@ -447,6 +447,9 @@ export default {
         }
       }).then((resp) => {
         _this.userAddr = resp.data.data
+        _this.receiverNameChecked=_this.userAddr[0].receiverName
+        _this.receiverTelChecked=_this.userAddr[0].receiverTel
+        _this.receiverAddrChecked=_this.userAddr[0].receiverAddr
       });
 
     } else {

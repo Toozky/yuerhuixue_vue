@@ -4,7 +4,7 @@
     <Menu :activeIndex2=activeIndex2 :form=form></Menu>
 
     <div id="instrumentInfo">
-      <el-card>
+      <el-card style="height:600px">
 
         <div id="insImg">
           <el-card shadow="never">
@@ -14,10 +14,11 @@
 
         <div id="insInfo">
           <h2>{{ instrument.insName }}</h2>
-          <p>描述　{{ instrument.insDesc }}</p><br>
+          <p>描述　{{ instrument.insDesc }}</p>
+          <p>单价　￥{{instrument.insPrice}}元</p><br>
           <div style="background-color: #F3F3F3;width: 100%;height:80px;line-height: 80px;margin-top: 0px">
-            <a>价格　</a>
-            <a style="font-size: xx-large;color: red">￥{{ instrument.insPrice }}</a>
+            <a>总价　</a>
+            <a style="font-size: xx-large;color: red">￥{{ instrument.insPrice*buyNumber }}</a>
             <a>　元</a>
           </div>
           <br>
@@ -49,7 +50,19 @@
             </el-dropdown>
           </div>
           <div style="margin: 20px">　{{ receiverAddrChecked }}</div>
+          数量：
+          <el-button-group>
+            <el-button :disabled="buyNumber===1?true:false" icon="el-icon-minus"
+                       @click="--buyNumber"
+                       circle
+            ></el-button>
+            <el-button style="width:80px">{{ buyNumber }}</el-button>
+            <el-button icon="el-icon-plus"
+                       @click="++buyNumber"
+                       circle></el-button>
+          </el-button-group>
         </div>
+
 
         <div id="insBuyBtn">
           <el-button type="danger" @click="buyGoods">　购买　</el-button>
@@ -162,7 +175,18 @@ export default {
       },
 
       //订单明细
-      orderDetail: {},
+      orderDetail: {
+        detailId: null,
+        orderId: null,
+        insId: null,
+        insName: '',
+        insImg: '',
+        insPrice: '',
+        buyNumber: '',
+        totalAmount: '',
+      },
+      orderDetailList: [],
+      buyNumber: 1,
     }
   },
 
@@ -218,6 +242,7 @@ export default {
       shoppingCart.ins.insId = _this.insId
       shoppingCart.ins.insName = _this.instrument.insName
       shoppingCart.ins.insImg = _this.instrument.insImg
+      shoppingCart.cartNumber=_this.buyNumber
       axios({
         method: 'post',
         url: '/shoppingCart/add',
@@ -254,10 +279,11 @@ export default {
       let orders = _this.orders
       orders.userId = _this.form.userId
       orders.allGoods = _this.instrument.insName
+      orders.actualAmount = _this.instrument.insPrice
+      orders.totalAmount = _this.instrument.insPrice
       orders.receiverName = _this.receiverNameChecked
       orders.receiverAddr = _this.receiverAddrChecked
-      orders.receiverTel=_this.receiverTelChecked
-
+      orders.receiverTel = _this.receiverTelChecked
 
       axios({
         method: 'post',
@@ -283,10 +309,42 @@ export default {
         }
       }).then((resp) => {
         if (resp.data.code === 10000) {
-          _this.$message({
-            showClose: true,
-            message: resp.data.msg,
-            type: 'success'
+          //主订单id
+          // console.log(resp.data.data)
+          let orderDetail = new Object
+          let ins = _this.instrument
+          orderDetail.detailId = 0
+          orderDetail.orderId = resp.data.data
+          orderDetail.insId = ins.insId
+          orderDetail.insName = ins.insName
+          orderDetail.insImg = ins.insImg
+          orderDetail.insPrice = ins.insPrice
+          orderDetail.buyNumber = _this.buyNumber
+          orderDetail.totalAmount = orderDetail.buyNumber * orderDetail.insPrice
+          _this.orderDetailList.push(orderDetail)
+
+          const formData = new FormData
+          let orderDetailListToString = JSON.stringify(_this.orderDetailList)
+          formData.append('orderDetailListToString', orderDetailListToString)
+          axios({
+            method: 'post',
+            url: '/order/addOrderDetail',
+            data: formData,
+            headers: {
+              'ContentType': 'multipart/form-data',
+            }
+          }).then((resp) => {
+            if (resp.data.code === 10000) {
+              _this.orderDetailList = []
+              _this.$router.push('/InsType')
+            }
+            if (resp.data.code === 10001) {
+              _this.$message({
+                showClose: true,
+                message: resp.data.msg,
+                type: 'error'
+              });
+            }
           });
 
         }
@@ -330,17 +388,12 @@ export default {
           userId: _this.form.userId
         }
       }).then((resp) => {
-        // console.log(resp.data)
         _this.userAddr = resp.data.data
+        _this.receiverAddrChecked = _this.userAddr[0].receiverAddr
+        _this.receiverTelChecked=_this.userAddr[0].receiverTel
+        _this.receiverAddrChecked=_this.userAddr[0].receiverAddr
       });
-    } /*else {
-      this.$router.push('/UserLogin');
-      _this.$message({
-        showClose: true,
-        type: 'info',
-        message: '您未登录，请先登录'
-      });
-    }*/
+    }
     //获取乐器信息
     _this.insId = this.$route.params.insId
     _this.getInsInfo(_this.insId)
@@ -367,7 +420,7 @@ export default {
 /*乐器展示div*/
 #instrumentInfo {
   width: 1200px;
-  height: 500px;
+  height: 600px;
   margin: 75px auto;
   /*background-color: #99a9bf;*/
   /*border: 1px black solid;*/

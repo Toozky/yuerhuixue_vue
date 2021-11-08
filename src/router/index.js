@@ -12,6 +12,7 @@ import UserAddr from "@/views/UserAddr";
 
 import UserUploadImg from '../views/UserUploadImg.vue'
 import ShoppingCart from '../views/ShoppingCart.vue'
+import OrderInfo from '../views/OrderInfo.vue'
 
 import AdminLogin from '../views/AdminLogin.vue'
 
@@ -76,10 +77,16 @@ const routes = [
         path: '/AdminLogin',
         name: 'AdminLogin',
         component: AdminLogin
-    },{
+    },
+    {
         path: '/UserAddr',
         name: 'UserAddr',
         component: UserAddr,
+    },
+    {
+        path:'/OrderInfo',
+        name: 'OrderInfo',
+        component: OrderInfo,
     },
     ...adminindex,
     ...shopindex
