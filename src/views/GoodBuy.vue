@@ -344,6 +344,7 @@ export default {
               });
             }
             if (resp.data.code === 10001) {
+              _this.$router.push('/InsType')
               _this.$message({
                 showClose: true,
                 message: resp.data.msg,
@@ -354,6 +355,7 @@ export default {
 
         }
         if (resp.data.code === 10001) {
+          _this.$router.push('/InsType')
           _this.$message({
             showClose: true,
             message: resp.data.msg,

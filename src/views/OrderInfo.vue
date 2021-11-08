@@ -21,10 +21,10 @@
                   </div>
                   <div style="float: left;text-align: left;">
 
-                    <p> 商品名称：{{ orderDetail.insName }}</p>
+                    <p>商品名称：{{ orderDetail.insName }}</p>
                     <p>商品单价：{{ orderDetail.insPrice }}</p>
                     <p>购买数量：{{ orderDetail.buyNumber }}</p>
-                    <p> 商品总价：{{ orderDetail.totalAmount }}</p>
+                    <p>商品总价：{{ orderDetail.totalAmount }}</p>
 
                   </div>
                 </el-card>
